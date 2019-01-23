@@ -5,9 +5,16 @@ from util import clean
 
 def enter_word(chosen_words, all_words, required_word):
     """
-    Required_word is added to chosen words.
-    When required_word already is in chosen_words or when required_word is not
-    in selected dictionary the user is informed by a message.
+    Adds given word into chosen words.
+
+    When required_word is already in chosen_words or when required_word is not
+    in selected dictionary the method returns an informative message.
+
+    :param chosen_words: Dictionary with words chosen by user for learning
+    :param all_words: Dictionary with all words user can choose from
+    :param required_word: Word requested to be added into chosen_words
+    :rtype: str
+    :return: Message describing what is the status of operation
     """
 
     # White characters from required_word are stripped
@@ -22,8 +29,8 @@ def enter_word(chosen_words, all_words, required_word):
     # When the word already is in MY VOCABULARY, the user is informed
     # by a message and is asked to enter another word
     elif required_word in chosen_words:
-        return("This word has been already entered. "
-               "Try entering another word.")
+        return ("This word has been already entered. "
+                "Try entering another word.")
 
     # Successfully entering is announced
     elif required_word in all_words:
@@ -33,8 +40,8 @@ def enter_word(chosen_words, all_words, required_word):
     else:
         # When the word is not in selected dictionary,
         # the user is informed by a message
-        return("This word is not in used dictionary. "
-               "Try entering another word.")
+        return ("This word is not in used dictionary. "
+                "Try entering another word.")
 
 
 def delete_word(chosen_words, required_word):
@@ -60,8 +67,8 @@ def delete_word(chosen_words, required_word):
     else:
         # When the word is not in selected dictionary, the user is informed
         # by a message and is asked to enter another word
-        return("This word is not in MY VOCABULARY. "
-               "Try deleting another word.")
+        return ("This word is not in MY VOCABULARY. "
+                "Try deleting another word.")
 
 
 def delete_selected(chosen_words, required_words):
@@ -112,7 +119,7 @@ def load_mv():
     try:
         # When there is saved chosen_words, it is loaded
         with open('save_mv.txt', encoding='utf-8') as saved:
-                chosen_words = json.loads(saved.read())
+            chosen_words = json.loads(saved.read())
 
     # In this case is created new empty dictionary chosen_words
     except FileNotFoundError:
