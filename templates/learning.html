@@ -31,8 +31,10 @@
 
         <form>
             <div>
+                {% if message %}
+
                 <p class="message">
-                    {% if message %}
+
                         {{message}}
 
                         <p class="no_words">
@@ -42,19 +44,19 @@
                         </p>
                 </p>
 
-                <p class="guess">
+                <p>
                     {% else %}
-
-
 
                         {% if result %}
                                 {{result}}
                                 <input type="submit" name="continue" value="Next">
 
                         {% else %}
-                                {{guess}}
-                                <input type="text" name="guessed">
-                                <input type="submit" name="enter-guessed" value="Confirm">
+                                <p class="guess">
+                                    {{guess}}
+                                    <input type="text" name="guessed">
+                                    <input type="submit" name="enter-guessed" value="Confirm">
+                                </p>
                         {% endif %}
 
                     {% endif %}

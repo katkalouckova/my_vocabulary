@@ -40,6 +40,8 @@ h2 {
 
 h3 {
     font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 10px;
 }
 
 .question {
@@ -91,7 +93,7 @@ h3 {
 }
 
 
-/* ADMINISTRATION */
+/* ADMINISTRATION + LEARNING */
 
 .administration,
 .learning {
@@ -102,10 +104,56 @@ h3 {
     margin: 30px 0;
 }
 
-table {
-    margin: 0 auto;
+input[type="submit"] {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 17px;
+    background-color: #1d5464;
+    color: #ffffc1;
+    border: 1px solid #1d5464;
+    border-radius: 6px;
+    padding: 5px 15px;
+}
+
+input[type="text"] {
+    font-size: 20px;
+    background-color: #ffffc1;
+    border: 1px solid #ffffc1;
+    border-radius: 6px;
+    padding: 5px;
 }
 
 .message {
     color: red;
+}
+
+.controls {
+    margin: 10px;
+}
+
+table {
+    margin: 0 auto;
+    border-spacing: 3px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px 50px 10px 10px;
+    border-radius: 6px;
+}
+
+tr:nth-child(even) {
+    background: #ffffc1;
+}
+
+tr:nth-child(odd) {
+    background: #ffff99;
+}
+
+.checkbox {
+    padding-right: 10px;
+}
+
+.guess {
+
 }

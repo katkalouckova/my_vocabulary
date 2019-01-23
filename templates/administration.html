@@ -45,22 +45,23 @@
                 {% endif %}
             </p>
 
-            <div>
-                {% if chosen_words %}
-                    <input type="submit" name="delete_selected" value="Delete"
-                           title="Delete selected words">
-                {% endif %}
-            </div>
 
             <div>
                 {% if chosen_words %}
                     <h3>MY VOCABULARY</h3>
 
+                    <p class="controls">
+                        <input type="submit" name="delete_selected" value="Delete"
+                               title="Delete selected words">
+                    </p>
+
                     <table>
+
+                        <col><col><col>
 
                         {% for key, value in chosen_words.items() %}
                             <tr>
-                                <td>
+                                <td class="checkbox">
                                     <input type="checkbox" name="select"
                                            value="{{key}}">
                                 </td>
