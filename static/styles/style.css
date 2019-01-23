@@ -1,0 +1,111 @@
+/*FIRST PAGE AND COMMON STYLE */
+
+
+body {
+   font-family: 'Source Sans Pro', sans-serif;
+   font-size: 20px;
+   color: #1d5464;
+   overflow: auto;
+}
+
+.header {
+    padding: 70px 30px 30px 30px;
+    background-color: #1d5464;
+    /* border: 2px solid #207e82; */
+    border-radius: 30px 30px 0 0;
+}
+
+.header div {
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Kodchasan', sans-serif;
+    /*text-shadow: 2px 2px 3px #207e82;*/
+    text-align: center;
+    margin: 30px;
+}
+
+h1 {
+    font-size: 70px;
+    color: #d8d860;
+}
+
+h2 {
+    font-size: 40px;
+    color: #1d5464;
+}
+
+h3 {
+    font-size: 30px;
+}
+
+.question {
+    font-size: 30px;
+    padding: 50px 15%;
+    background-color: #d8d860;
+    border-radius: 20px;
+    margin: 30px 10px;
+}
+
+.question,
+.possibilities {
+    text-align: center;
+    font-weight: bold;
+}
+
+.possibilities {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.possibilities a {
+    font-size: 25px;
+    text-decoration: none;
+    padding: 20px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1d5464;
+    flex-grow: 1;
+    background-color: #d8d860;
+    border-radius: 20px;
+    margin: 0 10px;
+    margin-bottom: 30px;
+}
+
+.possibilities a:hover,
+.possibilities a:focus,
+.possibilities a:active {
+    background-color: #b5b537;
+}
+
+
+.footer {
+    background-color: #1d5464;
+    color: #d8d860;
+    text-align: center;
+    padding: 15px  10px;
+    border-radius: 0 0 20px 20px;
+    /* margin-top: 10px; *//
+}
+
+
+/* ADMINISTRATION */
+
+.administration,
+.learning {
+    text-align: center;
+    padding: 30px 15%;
+    background-color: #d8d860;
+    border-radius: 30px;
+    margin: 30px 0;
+}
+
+table {
+    margin: 0 auto;
+}
+
+.message {
+    color: red;
+}

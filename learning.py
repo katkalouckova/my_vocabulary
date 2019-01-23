@@ -8,14 +8,10 @@ def learning_mode(chosen_words):
     during learning.
     """
 
-    # The user is informed about entering into the learning mode
-    print("LEARNING:\n")
-
     # If there are no words in chosen_words, the user is informed
     # by a message and the function ends
     if not chosen_words:
-        print("MY VOCABULARY is empty. Enter some words.\n")
-        return
+        return "MY VOCABULARY is empty. Enter some words."
 
     # in learned will be keys of words which are already learned
     unlearned = list(chosen_words.keys())
