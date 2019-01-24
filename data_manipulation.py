@@ -72,7 +72,7 @@ def delete_selected(chosen_words, required_words):
 
     # When there are no chosen_words, the user is informed
     if not chosen_words:
-        return "There are no words in MY VOCABULARY"
+        return "There are no words in MY VOCABULARY."
 
     # Variable required contents count of deleted words
     required = 0
@@ -88,7 +88,7 @@ def delete_selected(chosen_words, required_words):
 
     # When there are no marked words, the user is informed by a message
     if required == 0:
-        return "There are no marked words to delete."
+        return "There are no selected words to delete."
 
     # When there is one word selected, the user is informed by a message
     elif required == 1:

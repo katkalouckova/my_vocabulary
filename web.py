@@ -35,6 +35,9 @@ def admin():
     After each statement is my vocabulary saved.
     """
 
+    message = None
+    message_mv = None
+
     # When user enters some word via writing the word into text input
     # and pressing submit Enter word, is executed function enter_word
     # and the user is informed by a message
@@ -50,18 +53,22 @@ def admin():
     # When user marks some words and presses submit Delete, is executed
     # function delete_selected and the user is informed by a message
     elif "delete_selected" in request.args:
-        message = delete_selected(chosen_words,
+        message_mv = delete_selected(chosen_words,
                                   request.args.getlist('select'))
-    # Why did I write this possibility?
-    else:
-        message = None
 
     # After each statement are chosen_words saved.
     save_mv(chosen_words)
 
+
+    # When there are no words in chosen_words, the user is informed
+    # by a message
+    if not chosen_words:
+        message = "MY VOCABULARY is empty. Enter some words."
+
     return render_template(
         'administration.html',
         message=message,
+        message_mv=message_mv,
         chosen_words=chosen_words
         )
 
@@ -78,6 +85,8 @@ def learning():
     result = None
     is_done = None
     guess = None
+    successful = None
+    unsuccessful = None
 
     # When there are no words in chosen_words, the user is informed
     # by a message and the function ends
@@ -103,7 +112,7 @@ def learning():
 
                 # It is checked, if are all words learned (if in last round
                 # were any mistakes)
-                message = all_learned(learning_stats)
+                message, successful, unsuccessful = all_learned(learning_stats)
 
                 # When all words are not learned, empty list means
                 # that current round is at the end and it is necessary to
@@ -142,7 +151,9 @@ def learning():
                            message=message,
                            is_done=is_done,
                            result=result,
-                           guess=guess)
+                           guess=guess,
+                           successful=successful,
+                           unsuccessful=unsuccessful)
 
 
 # Run in debug mode

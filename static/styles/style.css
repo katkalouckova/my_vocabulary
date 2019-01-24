@@ -9,7 +9,7 @@ body {
 }
 
 .header {
-    padding: 70px 30px 30px 30px;
+    padding: 90px 30px 30px 30px;
     background-color: #1d5464;
     /* border: 2px solid #207e82; */
     border-radius: 30px 30px 0 0;
@@ -63,7 +63,8 @@ h3 {
     flex-wrap: wrap;
 }
 
-.possibilities a {
+.possibilities a,
+ .no_words a {
     font-size: 25px;
     text-decoration: none;
     padding: 20px;
@@ -104,7 +105,8 @@ h3 {
     margin: 30px 0;
 }
 
-input[type="submit"] {
+input[type="submit"],
+input[type="button"] {
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 17px;
     background-color: #1d5464;
@@ -120,6 +122,27 @@ input[type="text"] {
     border: 1px solid #ffffc1;
     border-radius: 6px;
     padding: 5px;
+}
+
+.bubble {
+    background-color: #ffffc1;
+    color: #1d5464;
+    display: inline-block;
+    font: 15px/25px sans-serif;
+    padding: 25px 25px;
+    position: relative;
+    /*text-shadow: 0 1px 1px hsla(0,0%,100%,.5);*/
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.bubble:after, .bubble:before {
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid #ffffc1;
+    bottom: -25px;
+    content: '';
+    position: absolute;
+    left: 35px;
 }
 
 .message {
@@ -154,6 +177,8 @@ tr:nth-child(odd) {
     padding-right: 10px;
 }
 
-.guess {
-
+.success {
+     font-family: 'Kodchasan', sans-serif;
+     text-align: center;
+     font-size: 30px;
 }

@@ -29,27 +29,26 @@
     <section class="learning">
         <h2>LEARNING MY VOCABULARY</h2>
 
-        <form>
+        <form autocomplete="off">
             <div>
                 {% if message %}
 
                 <p class="message">
 
-                        {{message}}
+                        <span class="bubble">{{message}}</span>
 
-                        <p class="no_words">
-                            {% if not is_done %}
-                                <a href="{{ url_for('admin')}}">Do you want to work with MY VOCABULARY?</a>
-                            {% endif %}
-                        </p>
+
                 </p>
 
                 <p>
                     {% else %}
 
                         {% if result %}
-                                {{result}}
-                                <input type="submit" name="continue" value="Next">
+                                <span class="bubble">{{result}}</span>
+
+                                <p>
+                                    <input type="submit" name="continue" value="Next">
+                                </p>
 
                         {% else %}
                                 <p class="guess">
@@ -61,6 +60,18 @@
 
                     {% endif %}
                 </p>
+
+                {% if successful %}
+
+                    <p class="trophy">
+
+                        <img src="/static/images/trophy.png" alt="trophy">
+                        <br>
+                        <p class="success">Successful/Unsuccessful:<br>
+                                           {{successful}}/{{unsuccessful}}</p>
+
+                    </p>
+                {% endif %}
 
             </div>
 

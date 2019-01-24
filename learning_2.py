@@ -71,7 +71,7 @@ def guess_word(guess, guessed, learning_state, learning_stats):
     # thus attempt is successful
     # The result is prepared and to successful is added 1 point
     if guessed == learning_state[guess]['value']:
-        result = f'Right! Translation of "{guess}" is: "{guessed}"'
+        result = f'Right! Translation of "{guess}" is "{guessed}".'
         learning_stats['successful'] += 1
 
     # If guessed is not equal to value of ordered word,
@@ -82,7 +82,7 @@ def guess_word(guess, guessed, learning_state, learning_stats):
         # round_mistakes(count of mistakes during round - together}
         # unsuccessful (count of unsuccessful attempts)
     else:
-        result = f'Wrong! Correct translation of "{guess}" is: ' \
+        result = f'Wrong! Correct translation of "{guess}" is ' \
                  f'"{learning_state[guess]["value"]}".'
         learning_state[guess]['all_mistakes'] += 1
         learning_stats['round_mistakes'] += 1
@@ -103,17 +103,17 @@ def all_learned(learning_stats):
     # the function returns message about the success and about count
     # of (un)successful attempts.
     if learning_stats['round_mistakes'] == 0:
-        message = f"Good job! You already know all words! "\
-                  f" Successful/unsuccessful: "\
-                  f"{learning_stats['successful']}/"\
-                  f"{learning_stats['unsuccessful']}"
+        message = f"Good job! You already know all words!"\
+
+        successful = learning_stats['successful']
+        unsuccessful = learning_stats['unsuccessful']
 
     # When there are some round_mistakes, the function ends
     # and returns None
     else:
         message = None
 
-    return message
+    return message, successful, unsuccessful
 
 
 def prepare_next_round(learning_state, learning_stats):

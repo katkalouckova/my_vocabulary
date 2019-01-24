@@ -28,9 +28,16 @@
     <section class="administration">
         <h2>WORK WITH MY VOCABULARY</h2>
 
-        <form>
+        <form autocomplete="off">
 
             <div>
+
+                 <p class="message">
+                    {% if message %}
+                        <span class="bubble">{{message}}</span>
+                    {% endif %}
+                </p>
+
                 Searched word:
                 <input type="text" name="word">
                 <input type="submit" name="enter" value="Enter word">
@@ -39,25 +46,26 @@
                 {% endif %}
             </div>
 
-            <p class="message">
-                {% if message %}
-                    {{message}}
-                {% endif %}
-            </p>
+
 
 
             <div>
                 {% if chosen_words %}
                     <h3>MY VOCABULARY</h3>
 
+                    {% if message_mv %}
+
+                        <span class="bubble">{{message_mv}}</span>
+
+                    {% endif %}
+
                     <p class="controls">
+                        <input class="select_all" onclick="toggle()" type="button" value="Toggle" title="Toggle all visible words">
                         <input type="submit" name="delete_selected" value="Delete"
                                title="Delete selected words">
                     </p>
 
                     <table>
-
-                        <col><col><col>
 
                         {% for key, value in chosen_words.items() %}
                             <tr>
@@ -70,11 +78,14 @@
                             </tr>
                         {% endfor %}
                     </table>
+
                 {% endif %}
             </div>
 
 
         </form>
+
+        <script src="/static/scripts/script.js"></script>
 
     </section>
 
