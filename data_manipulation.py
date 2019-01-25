@@ -26,13 +26,13 @@ def enter_word(chosen_words, all_words, required_word):
         return "Enter some word."
 
     # It is searched by keys
-    # When the word already is in MY VOCABULARY, the user is informed
+    # When the word is already in MY VOCABULARY, the user is informed
     # by a message and is asked to enter another word
     elif required_word in chosen_words:
-        return ("This word has been already entered. "
+        return ("This word has already been entered. "
                 "Try entering another word.")
 
-    # Successfully entering is announced
+    # Successfully entered word is announced
     elif required_word in all_words:
         chosen_words[required_word] = all_words[required_word]
         return "The word has been successfully entered."
@@ -46,15 +46,17 @@ def enter_word(chosen_words, all_words, required_word):
 
 def delete_word(chosen_words, required_word):
     """
+    Deletes required_word from chosen_words.
+
     The user deletes words which he doesn't want to learn from MY VOCABULARY
     (from chosen_words)
     """
 
-    # White characters from required_word are stripped
+    # White characters are stripped from required_word
     required_word.strip()
 
     # It is searched by keys
-    # When the word is in chosen_words, required word is deleted
+    # When the required_word is in chosen_words, required_word is deleted
     if required_word in chosen_words:
         del chosen_words[required_word]
         return "This word has been successfully deleted."
