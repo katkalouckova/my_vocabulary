@@ -29,36 +29,49 @@
     <section class="learning">
         <h2>LEARNING MY VOCABULARY</h2>
 
-        <form>
+        <form autocomplete="off">
             <div>
-                <p class="message">
-                    {% if message %}
-                        {{message}}
+                {% if message %}
 
-                        <p class="no_words">
-                            {% if not is_done %}
-                                <a href="{{ url_for('admin')}}">Do you want to work with MY VOCABULARY?</a>
-                            {% endif %}
-                        </p>
+                <p class="message">
+
+                        <span class="bubble">{{message}}</span>
+
+
                 </p>
 
-                <p class="guess">
+                <p>
                     {% else %}
 
-
-
                         {% if result %}
-                                {{result}}
-                                <input type="submit" name="continue" value="Next">
+                                <span class="bubble">{{result}}</span>
+
+                                <p>
+                                    <input type="submit" name="continue" value="Next">
+                                </p>
 
                         {% else %}
-                                {{guess}}
-                                <input type="text" name="guessed">
-                                <input type="submit" name="enter-guessed" value="Confirm">
+                                <p class="guess">
+                                    {{guess}}
+                                    <input type="text" name="guessed">
+                                    <input type="submit" name="enter-guessed" value="Confirm">
+                                </p>
                         {% endif %}
 
                     {% endif %}
                 </p>
+
+                {% if successful %}
+
+                    <p class="trophy">
+
+                        <img src="/static/images/trophy.png" alt="trophy">
+                        <br>
+                        <p class="success">Successful/Unsuccessful:<br>
+                                           {{successful}}/{{unsuccessful}}</p>
+
+                    </p>
+                {% endif %}
 
             </div>
 
