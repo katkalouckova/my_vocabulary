@@ -1,6 +1,4 @@
 import json
-from constant import AGREE, DISAGREE
-from util import clean
 
 
 def enter_word(chosen_words, all_words, required_word):
