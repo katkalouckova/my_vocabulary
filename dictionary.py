@@ -1,11 +1,14 @@
 def load_dictionary():
     """
-    The dictionary is loaded.
+    Loads dictionary.
+
+    So far it is hardcoded here. In the future it will be dynamically loaded
+    from some service.
     """
 
     # Variable all_words contains all words from selected dictionary
     # In keys are czech equivalents,
-    # in values are english equivalents
+    # In values are english equivalents
     all_words = {"být": "be",
                  "bít": "beat",
                  "stát se čím": "become",
