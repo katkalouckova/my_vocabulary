@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>MY VOCABULARY ADMINISTRATION</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+   <link href="https://fonts.googleapis.com/css?family=Kodchasan:700|Source+Sans+Pro:400,400i,700&amp;subset=latin-ext" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+
+        <h1>MY VOCABULARY</h1>
+
+        <div>
+            <a href="{{url_for('home')}}">
+            <img src="/static/images/streetsign.png" alt="homepage">
+            </a>
+        </div>
+
+    </header>
+
+    <!-- Administration -->
+    <section class="administration">
+        <h2>WORK WITH MY VOCABULARY</h2>
+
+        <form autocomplete="off">
+
+            <div>
+                 <p>
+                    {% if message %}
+                        <span class="bubble">{{message}}</span>
+                    {% endif %}
+                </p>
+
+                <p>
+                    Searched word:
+                    <input type="text" name="word">
+                    <input type="submit" name="add" value="Add word">
+                    {% if chosen_words %}
+                        <input type="submit" name="delete" value="Delete word">
+                    {% endif %}
+                </p>
+            </div>
+
+
+
+            <!-- MY VOCABULARY -->
+            <div>
+                {% if chosen_words %}
+                    <h3>MY VOCABULARY</h3>
+
+                    {% if message_mv %}
+
+                        <span class="bubble">{{message_mv}}</span>
+
+                    {% endif %}
+
+                    <p class="controls">
+                        <input class="select_all" onclick="toggle()" type="button" value="Toggle" title="Toggle all visible words">
+                        <input type="submit" name="delete_selected" value="Delete"
+                               title="Delete selected words">
+                    </p>
+
+                    <table>
+
+                        {% for key, value in chosen_words.items() %}
+                            <tr>
+                                <td class="checkbox">
+                                    <input type="checkbox" name="select"
+                                           value="{{key}}">
+                                </td>
+                                <td>{{key}}</td>
+                                <td>{{value}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                {% endif %}
+            </div>
+
+
+        </form>
+
+        <script src="/static/scripts/script.js"></script>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2018-2019, Kateřina Loučková</p>
+    </footer>
+
+</body>
+
+
+</html>

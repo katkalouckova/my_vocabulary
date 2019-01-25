@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>MY VOCABULARY</title>
+    <link rel="stylesheet" href="/static/styles/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Kodchasan:700|Source+Sans+Pro:400,400i,700&amp;subset=latin-ext" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+
+        <h1>MY VOCABULARY</h1>
+
+    </header>
+
+    <!-- Introductory question -->
+    <section class="question">What do you want to do?</section>
+
+    <!-- Possibilities -->
+    <section class="possibilities">
+
+        <a href="{{ url_for('admin') }}">
+            <img src="/static/images/tools.png" alt="administration">
+            <br>
+            Work with MY VOCABULARY
+        </a>
+
+        <a href="{{ url_for('learning')}}">
+            <img src="/static/images/book.png" alt="learning">
+            <br>
+            Learn words from MY VOCABULARY
+        </a>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2018-2019, Kateřina Loučková</p>
+    </footer>
+
+</body>
+
+
+</html>

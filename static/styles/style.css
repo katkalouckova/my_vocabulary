@@ -1,0 +1,177 @@
+/*FIRST PAGE AND COMMON STYLE */
+
+
+body {
+   font-family: 'Source Sans Pro', sans-serif;
+   font-size: 20px;
+   color: #1d5464;
+   overflow: auto;
+}
+
+.header {
+    padding: 90px 30px 30px 30px;
+    background-color: #1d5464;
+    /* border: 2px solid #207e82; */
+    border-radius: 30px 30px 0 0;
+}
+
+.header div {
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Kodchasan', sans-serif;
+    text-align: center;
+    margin: 30px;
+}
+
+h1 {
+    font-size: 70px;
+    color: #d8d860;
+}
+
+h2 {
+    font-size: 40px;
+    color: #1d5464;
+}
+
+h3 {
+    font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.question {
+    font-size: 30px;
+    padding: 50px 15%;
+    background-color: #d8d860;
+    border-radius: 20px;
+    margin: 30px 10px;
+}
+
+.question,
+.possibilities {
+    text-align: center;
+    font-weight: bold;
+}
+
+.possibilities {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.possibilities a,
+ .no_words a {
+    font-size: 25px;
+    text-decoration: none;
+    padding: 20px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #1d5464;
+    flex-grow: 1;
+    background-color: #d8d860;
+    border-radius: 20px;
+    margin: 0 10px;
+    margin-bottom: 30px;
+}
+
+.possibilities a:hover,
+.possibilities a:focus,
+.possibilities a:active {
+    background-color: #b5b537;
+}
+
+
+.footer {
+    background-color: #1d5464;
+    color: #d8d860;
+    text-align: center;
+    padding: 15px  10px;
+    border-radius: 0 0 20px 20px;
+}
+
+
+/* ADMINISTRATION + LEARNING */
+
+.administration,
+.learning {
+    text-align: center;
+    padding: 30px 15%;
+    background-color: #d8d860;
+    border-radius: 30px;
+    margin: 30px 0;
+}
+
+input[type="submit"],
+input[type="button"] {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 17px;
+    background-color: #1d5464;
+    color: #ffffc1;
+    border: 1px solid #1d5464;
+    border-radius: 6px;
+    padding: 5px 15px;
+}
+
+input[type="text"] {
+    font-size: 20px;
+    background-color: #ffffc1;
+    border: 1px solid #ffffc1;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.bubble {
+    background-color: #ffffc1;
+    color: #1d5464;
+    display: inline-block;
+    font: 15px/25px sans-serif;
+    padding: 25px 25px;
+    position: relative;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.bubble:after, .bubble:before {
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid #ffffc1;
+    bottom: -25px;
+    content: '';
+    position: absolute;
+    left: 35px;
+}
+
+.controls {
+    margin: 10px;
+}
+
+table {
+    margin: 0 auto;
+    border-spacing: 3px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 10px 50px 10px 10px;
+    border-radius: 6px;
+}
+
+tr:nth-child(even) {
+    background: #ffffc1;
+}
+
+tr:nth-child(odd) {
+    background: #ffff99;
+}
+
+.checkbox {
+    padding-right: 10px;
+}
+
+.success {
+     font-family: 'Kodchasan', sans-serif;
+     text-align: center;
+     font-size: 30px;
+}

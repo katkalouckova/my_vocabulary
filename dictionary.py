@@ -1,11 +1,12 @@
-def load_dictionary():
+def load_dictionary() -> dict:
     """
-    The dictionary is loaded.
+    Loads dictionary.
+    :return: all_words: dict, used dictionary
     """
 
     # Variable all_words contains all words from selected dictionary
-    # In keys are czech equivalents,
-    # in values are english equivalents
+    # In keys are czech equivalents
+    # In values are english equivalents
     all_words = {"být": "be",
                  "bít": "beat",
                  "stát se čím": "become",
