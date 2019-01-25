@@ -31,24 +31,25 @@
         <form autocomplete="off">
 
             <div>
-
-                 <p class="message">
+                 <p>
                     {% if message %}
                         <span class="bubble">{{message}}</span>
                     {% endif %}
                 </p>
 
-                Searched word:
-                <input type="text" name="word">
-                <input type="submit" name="enter" value="Enter word">
-                {% if chosen_words %}
-                    <input type="submit" name="delete" value="Delete word">
-                {% endif %}
+                <p>
+                    Searched word:
+                    <input type="text" name="word">
+                    <input type="submit" name="add" value="Add word">
+                    {% if chosen_words %}
+                        <input type="submit" name="delete" value="Delete word">
+                    {% endif %}
+                </p>
             </div>
 
 
 
-
+            <!-- MY VOCABULARY -->
             <div>
                 {% if chosen_words %}
                     <h3>MY VOCABULARY</h3>

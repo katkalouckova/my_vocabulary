@@ -1,58 +1,66 @@
 import json
-from constant import AGREE, DISAGREE
-from util import clean
 
 
-def enter_word(chosen_words, all_words, required_word):
+def add_word(chosen_words: dict, all_words: dict, required_word: str) -> str:
     """
-    Required_word is added to chosen words.
-    When required_word already is in chosen_words or when required_word is not
-    in selected dictionary the user is informed by a message.
+    Adds required_word into chosen words.
+    When required_word is already in chosen_words or when required_word is not
+    in selected dictionary the function returns an informative message.
+    :rtype: str
+    :param chosen_words: dictionary, contains words which the user wants to
+    learn
+    :param all_words: dictionary, words from used dictionary
+    :param required_word: str, word which the user wants to add into
+    chosen_words
+    :return: message about (un)successful addition
     """
 
-    # White characters from required_word are stripped
+    # White characters are stripped from required_word
     required_word.strip()
 
     # When required word contents empty string or only white characters,
     # the user is informed and is asked to enter some word
     if not required_word:
-        return "Enter some word."
+        return "Add some word."
 
     # It is searched by keys
-    # When the word already is in MY VOCABULARY, the user is informed
+    # When the word is already in MY VOCABULARY, the user is informed
     # by a message and is asked to enter another word
     elif required_word in chosen_words:
-        return("This word has been already entered. "
-               "Try entering another word.")
+        return("This word has been already added. "
+               "Try adding another word.")
 
-    # Successfully entering is announced
+    # Successfully addition is announced
     elif required_word in all_words:
         chosen_words[required_word] = all_words[required_word]
-        return "The word has been successfully entered."
+        return "The word has been successfully added."
 
     else:
         # When the word is not in selected dictionary,
         # the user is informed by a message
         return("This word is not in used dictionary. "
-               "Try entering another word.")
+               "Try adding another word.")
 
 
-def delete_word(chosen_words, required_word):
+def delete_word(chosen_words: dict, required_word: str) -> str:
     """
-    The user deletes words which he doesn't want to learn from MY VOCABULARY
-    (from chosen_words)
+    Deletes required_word from chosen_words.
+    :rtype: str
+    :param chosen_words: contains words which the user wants to learn
+    :param required_word: word which the user wants to delete from chosen_words
+    :return: message about (un)successful deletion
     """
 
-    # White characters from required_word are stripped
+    # White characters are stripped from required_word
     required_word.strip()
 
     # It is searched by keys
-    # When the word is in chosen_words, required word is deleted
+    # When the required_word is in chosen_words, required_word is deleted
     if required_word in chosen_words:
         del chosen_words[required_word]
         return "This word has been successfully deleted."
 
-    # When required word contents empty string or only white characters,
+    # When required word contains empty string or only white characters,
     # the user is informed and is asked to enter some word
     if not required_word:
         return "Write the word which you want to delete."
@@ -64,24 +72,27 @@ def delete_word(chosen_words, required_word):
                "Try deleting another word.")
 
 
-def delete_selected(chosen_words, required_words):
+def delete_selected(chosen_words: dict, required_words: str) -> str:
     """
-    Required_words are checked one by one, if they are in chosen_words
-    Words which are not in this dictionary are added
+    Deletes all required_words from chosen_words.
+    :rtype: str
+    :param chosen_words: contains words which the user wants to learn
+    :param required_words: words which the user wants to delete from chosen_words
+    :return: message about (un)successful deletion
     """
 
     # When there are no chosen_words, the user is informed
     if not chosen_words:
         return "There are no words in MY VOCABULARY."
 
-    # Variable required contents count of deleted words
+    # Variable required contains number of deleted words
     required = 0
 
     for required_word in required_words:
 
         # It is searched by keys
-        # All marked words are deleted
-        # After deleting of each word is 1 point added to variable required
+        # All required_words are deleted
+        # After deletion of each word 1 point is added to variable required
         if required_word in chosen_words:
             del chosen_words[required_word]
             required += 1
@@ -100,31 +111,33 @@ def delete_selected(chosen_words, required_words):
         return f'{required} selected words have been successfully deleted.'
 
 
-def load_mv():
+def load_mv() -> dict:
     """
-    Chosen_words are loaded.
+    Loads chosen_words.
     In the case there are no saved chosen_words,
     it is created new empty dictionary chosen_words.
+    :rtype: dict
+    :return: chosen_words: dict, contains words which the user wants to learn
     """
 
     # When there is no dictionary chosen_words, block try-except prevents
-    # raising of Exception
+    # crashing in case of Exception
     try:
         # When there is saved chosen_words, it is loaded
         with open('save_mv.txt', encoding='utf-8') as saved:
-                chosen_words = json.loads(saved.read())
+            chosen_words = json.loads(saved.read())
 
-    # In this case is created new empty dictionary chosen_words
+    # In such case new empty dictionary chosen_words is created
     except FileNotFoundError:
         chosen_words = {}
 
     return chosen_words
 
 
-def save_mv(chosen_words):
+def save_mv(chosen_words: dict) -> None:
     """
-    Before leaving the program are words from MY VOCABULARY saved
-    to save_mv.txt.
+    Saves chosen_words to the disk.
+    :param chosen_words: dict, contains words which the user wants to learn
     """
 
     with open('save_mv.txt', mode='w', encoding='utf-8') as saved:

@@ -23,7 +23,6 @@ h1,
 h2,
 h3 {
     font-family: 'Kodchasan', sans-serif;
-    /*text-shadow: 2px 2px 3px #207e82;*/
     text-align: center;
     margin: 30px;
 }
@@ -90,7 +89,6 @@ h3 {
     text-align: center;
     padding: 15px  10px;
     border-radius: 0 0 20px 20px;
-    /* margin-top: 10px; *//
 }
 
 
@@ -131,7 +129,6 @@ input[type="text"] {
     font: 15px/25px sans-serif;
     padding: 25px 25px;
     position: relative;
-    /*text-shadow: 0 1px 1px hsla(0,0%,100%,.5);*/
     border-radius: 30px;
     margin-bottom: 20px;
 }
@@ -143,10 +140,6 @@ input[type="text"] {
     content: '';
     position: absolute;
     left: 35px;
-}
-
-.message {
-    color: red;
 }
 
 .controls {
