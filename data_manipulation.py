@@ -61,7 +61,7 @@ def delete_word(chosen_words, required_word):
         del chosen_words[required_word]
         return "This word has been successfully deleted."
 
-    # When required word contents empty string or only white characters,
+    # When required_word contains empty string or only white characters,
     # the user is informed and is asked to enter some word
     if not required_word:
         return "Write the word which you want to delete."
@@ -75,6 +75,8 @@ def delete_word(chosen_words, required_word):
 
 def delete_selected(chosen_words, required_words):
     """
+    Deletes all required_words from chosen_words.
+
     Required_words are checked one by one, if they are in chosen_words
     Words which are not in this dictionary are added
     """
@@ -83,14 +85,14 @@ def delete_selected(chosen_words, required_words):
     if not chosen_words:
         return "There are no words in MY VOCABULARY."
 
-    # Variable required contents count of deleted words
+    # Variable required contains number of deleted words
     required = 0
 
     for required_word in required_words:
 
         # It is searched by keys
-        # All marked words are deleted
-        # After deleting of each word is 1 point added to variable required
+        # All required_words are deleted
+        # After deleting each word 1 point is added to variable required
         if required_word in chosen_words:
             del chosen_words[required_word]
             required += 1
@@ -106,24 +108,27 @@ def delete_selected(chosen_words, required_words):
     # When there are more words selected, the user is informed by a message
     # The message contents also information about the count of deleted words
     elif required > 1:
-        return f'{required} selected words have been successfully deleted.'
+        return f'{required} Selected words have been successfully deleted.'
 
 
 def load_mv():
     """
-    Chosen_words are loaded.
+    Loads chosen_words from the disk.
+
     In the case there are no saved chosen_words,
     it is created new empty dictionary chosen_words.
     """
 
     # When there is no dictionary chosen_words, block try-except prevents
-    # raising of Exception
+    # crashing in case of Exception
     try:
         # When there is saved chosen_words, it is loaded
         with open('save_mv.txt', encoding='utf-8') as saved:
             chosen_words = json.loads(saved.read())
 
-    # In this case is created new empty dictionary chosen_words
+    # In such case new empty dictionary chosen_words is created
+    # TODO catch also JSONDecodeError exception
+    #  see https://docs.python.org/3/library/json.html#json.loads
     except FileNotFoundError:
         chosen_words = {}
 
@@ -132,6 +137,8 @@ def load_mv():
 
 def save_mv(chosen_words):
     """
+    Saves chosen_words to the disk.
+
     Before leaving the program are words from MY VOCABULARY saved
     to save_mv.txt.
     """
