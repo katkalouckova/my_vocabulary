@@ -5,13 +5,13 @@ from data_manipulation import load_mv, enter_word, delete_word, \
 from learning_2 import prepare_learning, guess_word, all_learned, \
     prepare_next_round
 
-# At the beginning are set some global variables
+# At the beginning some global variables are set
 all_words = load_dictionary()
 chosen_words = load_mv()
 learning_state = None
 learning_stats = None
 
-# Command entered at the beginning of every flask application
+# Create a Flask application
 app = Flask(__name__)
 
 
@@ -20,7 +20,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     """
-    Function home  returns render_template with the homepage.
+    Creates home page.
     """
     return render_template('index.html')
 
@@ -28,37 +28,38 @@ def home():
 @app.route('/administration/')
 def admin():
     """
-    Function admin contents possibilities, what can I do with my vocabulary:
+    Creates administration page.
+
+    Admin page contains possibilities what user can do with my vocabulary:
         * enter words into my vocabulary (one word)
         * delete words from my vocabulary (one word)
         * delete selected words (one or more marked words)
-    After each statement is my vocabulary saved.
+    After each statement my vocabulary is saved.
     """
 
     message = None
     message_mv = None
 
     # When user enters some word via writing the word into text input
-    # and pressing submit Enter word, is executed function enter_word
+    # and pressing submit Enter word, function enter_word is executed
     # and the user is informed by a message
     if "enter" in request.args:
         message = enter_word(chosen_words, all_words, request.args['word'])
 
     # When user enters some word via writing the word into text input
-    # and pressing submit Delete word, is executed function delete_word
+    # and pressing submit Delete word, function delete_word is executed
     # and the user is informed by a message
     elif "delete" in request.args:
         message = delete_word(chosen_words, request.args['word'])
 
-    # When user marks some words and presses submit Delete, is executed
-    # function delete_selected and the user is informed by a message
+    # When user marks some words and presses submit Delete, function
+    # delete_selected is executed and the user is informed by a message
     elif "delete_selected" in request.args:
         message_mv = delete_selected(chosen_words,
-                                  request.args.getlist('select'))
+                                     request.args.getlist('select'))
 
-    # After each statement are chosen_words saved.
+    # After each statement chosen_words are saved.
     save_mv(chosen_words)
-
 
     # When there are no words in chosen_words, the user is informed
     # by a message
@@ -70,13 +71,13 @@ def admin():
         message=message,
         message_mv=message_mv,
         chosen_words=chosen_words
-        )
+    )
 
 
 @app.route('/learning/')
 def learning():
     """
-    Function learning manages the process of learning.
+    Manages the process of learning.
     """
 
     # Some variables are prepared
@@ -94,12 +95,12 @@ def learning():
         message = "MY VOCABULARY is empty. Enter some words."
 
     else:
-        # No learning_state means, that the user is on the beginning
+        # No learning_state means, that the user is at the beginning
         # of his learning
-        # It is called the function prepare_learning and the variables
+        # The function prepare_learning is called and the variables
         # learning_state and learning_stats are prepared for learning
         if not learning_state:
-                learning_state, learning_stats = prepare_learning(chosen_words)
+            learning_state, learning_stats = prepare_learning(chosen_words)
 
         # When the user wants to continue with learning
         if 'continue' in request.args:
@@ -107,21 +108,21 @@ def learning():
             # Ordered word from previous learning is deleted
             del learning_stats['ordered_words'][0]
 
-            # When there are no words more in ordered_words
+            # When there are no more words in ordered_words
             if not learning_stats['ordered_words']:
 
-                # It is checked, if are all words learned (if in last round
-                # were any mistakes)
+                # It is checked, if all words are learned (if there were any
+                # mistakes in the previous round)
                 message, successful, unsuccessful = all_learned(learning_stats)
 
-                # When all words are not learned, empty list means
+                # When all words are not learned yet, empty list means
                 # that current round is at the end and it is necessary to
                 # prepare next round
                 if not message:
                     learning_state, learning_stats = prepare_next_round(
                         learning_state, learning_stats)
 
-                # In this case is learned done
+                # In this case learning is done
                 # The function ends and variables learning_state
                 # and learning_stats are prepared for next learning
                 else:
@@ -156,9 +157,7 @@ def learning():
                            unsuccessful=unsuccessful)
 
 
-# Run in debug mode
+# Run the application if executed as main package
 if __name__ == '__main__':
+    # Run in debug mode
     app.run(debug=True)
-
-
-
