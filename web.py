@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from dictionary import load_dictionary
 from data_manipulation import load_mv, add_word, delete_word, \
     delete_selected, save_mv
-from learning import prepare_learning, guess_word, all_learned, \
+from learning import prepare_learning, guess_word, check_all_learned, \
     prepare_next_round
 
 # At the beginning some global variables are set
@@ -111,7 +111,7 @@ def learning():
 
                 # It is checked, if all words are learned (if there were
                 # any mistakes in the previous round)
-                message, successful, unsuccessful = all_learned(learning_stats)
+                message, successful, unsuccessful = check_all_learned(learning_stats)
 
                 # When all words are not learned yet, empty list means
                 # that current round is at the end and it is necessary to

@@ -100,7 +100,7 @@ def guess_word(guess: str, guessed: str, learning_state: dict, learning_stats: d
     return result, learning_state, learning_stats
 
 
-def all_learned(learning_stats: dict) -> tuple:
+def check_all_learned(learning_stats: dict) -> tuple:
     """
     Checks whether all words have been learned.
     The function returns message about the success and about number
