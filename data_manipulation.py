@@ -15,9 +15,6 @@ def add_word(chosen_words: dict, all_words: dict, required_word: str) -> str:
     :return: message about (un)successful addition
     """
 
-    # White characters are stripped from required_word
-    required_word.strip()
-
     # When required word contents empty string or only white characters,
     # the user is informed and is asked to enter some word
     if not required_word:
@@ -50,9 +47,6 @@ def delete_word(chosen_words: dict, required_word: str) -> str:
     :param required_word: word which the user wants to delete from chosen_words
     :return: message about (un)successful deletion
     """
-
-    # White characters are stripped from required_word
-    required_word.strip()
 
     # It is searched by keys
     # When the required_word is in chosen_words, required_word is deleted

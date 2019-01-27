@@ -72,10 +72,6 @@ def guess_word(guess: str, guessed: str, learning_state: dict, learning_stats: d
     learning_state, learning_stats: information about learning
     """
 
-    # White characters from the beginning and from the end
-    # of guessed word are stripped
-    guessed.strip()
-
     # If guessed word is equal to value of ordered word,
     # this attempt is successful
     # The result is prepared and 1 point is added to successful counter

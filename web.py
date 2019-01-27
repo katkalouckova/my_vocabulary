@@ -41,13 +41,19 @@ def admin():
     # and pressing submit Enter word, function add_word is executed
     # and the user is informed by a message
     if "add" in request.args:
-        message = add_word(chosen_words, all_words, request.args['word'])
+        required_word = request.args['word']
+        # White characters are stripped from required_word
+        required_word.strip()
+        message = add_word(chosen_words, all_words, required_word)
 
     # When user enters some word via writing the word into text input
     # and pressing submit Delete word, function delete_word is executed
     # and the user is informed by a message
     elif "delete" in request.args:
-        message = delete_word(chosen_words, request.args['word'])
+        required_word = request.args['word']
+        # White characters are stripped from required_word
+        required_word.strip()
+        message = delete_word(chosen_words, required_word)
 
     # When user marks some words and presses submit Delete, function
     # delete_selected is executed and the user is informed by a message
@@ -139,6 +145,9 @@ def learning():
         # and learning_stats
         if 'enter-guessed' in request.args:
             guessed = request.args['guessed']
+            # White characters from the beginning and from the end
+            # of guessed word are stripped
+            guessed.strip()
             result, learning_state, learning_stats = guess_word(
                 guess,
                 guessed,
