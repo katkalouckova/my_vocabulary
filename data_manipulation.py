@@ -68,7 +68,7 @@ def delete_word(chosen_words: dict, required_word: str) -> str:
 
 def delete_selected(chosen_words: dict, required_words: str) -> str:
     """
-    Deletes all required_words from chosen_words.
+    Deletes all required_words from self.chosen_words.
     :rtype: str
     :param chosen_words: contains words which the user wants to learn
     :param required_words: words which the user wants to delete from chosen_words
