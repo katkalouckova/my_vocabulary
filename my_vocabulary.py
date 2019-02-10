@@ -111,6 +111,11 @@ class MyVocabulary:
 
 
 class AllWords:
+    """
+    A class for storage and manipulation of used dictionary.
+    Instance attributes:
+        * self.content: content of used dictionary
+    """
 
     def __init__(self):
         self.content = {"být": "be",
@@ -125,8 +130,8 @@ class AllWords:
                         "koupit": "buy"}
 
     def search(self, required):
-        if required in self.content:
-            return True
+        return required in self.content
+
 
     def value(self, key):
         return self.content[key]
