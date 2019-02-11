@@ -1,3 +1,4 @@
+from unittest.mock import mock_open
 import pytest
 import builtins
 from io import StringIO
@@ -8,9 +9,10 @@ my_vocabulary = MyVocabulary(AllWords())
 
 
 def test_load_mv():
-    flexmock(builtins).should_receive('open').and_return(StringIO('{"fake":"fake"}'))
+    flexmock(builtins).should_receive('open').and_return(StringIO('{"fake'
+                                                                  '":"fake"}'))
     faked_vocabulary = MyVocabulary(AllWords())
-    assert faked_vocabulary.chosen_words == {"fake":"fake"}
+    assert faked_vocabulary.chosen_words == {"fake": "fake"}
 
 
 def test_create_mv():
@@ -96,11 +98,16 @@ def test_delete_three_selected(key):
     assert deleted_words == "3 words have been successfully deleted."
 
 
-# TODO rewrite this test
-def test_save_mv():
-    fake = StringIO('')
-    faked_vocabulary = MyVocabulary(AllWords())
-    faked_vocabulary.chosen_words = {"koupit": "buy"}
-    flexmock(builtins).should_receive('open').and_return(fake)
-    faked_vocabulary.save()
-    assert fake.getvalue() == '{"koupit":"buy"}'
+def test_save():
+    fake_file = mock_open(read_data='{}')
+    flexmock(builtins, open=fake_file)
+    my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
+                                  "postavit": "build"}
+    my_vocabulary.save()
+
+    # Three following lines get what was written to the file
+    string = ''
+    for call in fake_file.return_value.write.mock_calls:
+        string += (call[1][0])
+    assert string == '{"koupit": "buy", "b\\u00fdt": "be", "postavit": ' \
+                     '"build"}\n '
