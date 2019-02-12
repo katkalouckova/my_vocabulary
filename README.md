@@ -5,8 +5,8 @@
 It is a Flask application written in Python.
 
 There are two possibilities what to do:
-    1. work with my vocabulary
-    2. learn words from my vocabulary
+1. work with my vocabulary
+2. learn words from my vocabulary
 
 
 WORK WITH MY VOCABULARY

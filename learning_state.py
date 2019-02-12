@@ -19,6 +19,8 @@ class LearningState:
                                'learned': False,
                                'all_mistakes': 0}
 
+        self.my_vocabulary = my_vocabulary
+
     def round_mistakes_clear(self):
         """
         Sets a number of round_mistakes to 0.
@@ -35,17 +37,17 @@ class LearningState:
 
         self.successful += 1
 
-    def value(self, word):
+    def value(self, key):
         """
         Returns a value to a word(key).
         :return: str
         """
 
-        return self.words[word]['value']
+        return self.words[key]['value']
 
-    def unlearned(self, word):
+    def unlearned(self):
         """
-        Checks whether the word is learned (True).
+        Returns the list of unlearned words.
         :return: list
         """
 
@@ -57,21 +59,21 @@ class LearningState:
 
         return unlearned
 
-    def set_learned(self, word):
+    def set_learned(self, key):
         """
         Sets learned to True.
         :return: None
         """
 
-        self.words[word]['learned'] = True
+        self.words[key]['learned'] = True
 
-    def all_mistakes(self, word):
+    def all_mistakes(self, key):
         """
         Returns number of mistakes during learning of the word.
         :return: int
         """
 
-        return self.words[word]['all_mistakes']
+        return self.words[key]['all_mistakes']
 
 
 
