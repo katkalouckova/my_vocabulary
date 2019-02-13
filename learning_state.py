@@ -11,6 +11,7 @@ class LearningState:
         self.round_mistakes = 0
         self.successful = 0
         self.unsuccessful = 0
+        self.ordered_words = list(my_vocabulary.chosen_words.keys())
 
         self.words = {}
 
@@ -74,8 +75,3 @@ class LearningState:
         """
 
         return self.words[key]['all_mistakes']
-
-
-
-
-

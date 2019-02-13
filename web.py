@@ -140,7 +140,7 @@ def learning():
             guess = learning_stats['ordered_words'][0]
 
         # The user enters guessed word
-        # The function guess_word checks success or failure of the user
+        # The function check_guessing checks success or failure of the user
         # and returns the result and changed values of learning_state
         # and learning_stats
         if 'enter-guessed' in request.args:
