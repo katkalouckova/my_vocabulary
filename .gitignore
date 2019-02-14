@@ -1,1 +1,3 @@
 .idea
+.pytest_cache
+__venv__
