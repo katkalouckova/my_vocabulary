@@ -1,4 +1,5 @@
 from random import shuffle
+from my_vocabulary import MyVocabulary, AllWords
 
 
 class LearningState:
@@ -10,20 +11,19 @@ class LearningState:
     """
 
     def __init__(self, my_vocabulary):
-
+        self.my_vocabulary = my_vocabulary
         self.round_mistakes = 0
         self.successful = 0
         self.unsuccessful = 0
-        self.ordered_words = list(my_vocabulary.chosen_words.keys())
+        self.ordered_words = list(self.my_vocabulary.chosen_words.keys())
 
         self.words = {}
 
-        for key, value in my_vocabulary.chosen_words.items():
+        for key, value in self.my_vocabulary.chosen_words.items():
             self.words[key] = {'value': value,
                                'learned': False,
                                'all_mistakes': 0}
 
-        self.my_vocabulary = my_vocabulary
 
     def round_mistakes_clear(self):
         """
@@ -79,6 +79,22 @@ class LearningState:
 
         return self.words[key]['all_mistakes']
 
+    def delete_first_ordered_word(self):
+        """
+        Deletes first item from list self.ordered_words
+        :return: None
+        """
+
+        del self.ordered_words[0]
+
+    def reset(self):
+        """
+        Clears learning_state.
+        :return: new instance of this class
+        """
+
+        self.__init__(self.my_vocabulary)
+
 
 class LearningProcess:
     """
@@ -89,6 +105,14 @@ class LearningProcess:
 
     def __init__(self, learning_state):
         self.learning_state = learning_state
+
+    def guess(self):
+        """
+        Returns first item from self.ordered_words(for guessing).
+        :return: str
+        """
+
+        return self.learning_state.ordered_words[0]
 
     def check_guessing(self, guess, guessed):
         """
@@ -136,10 +160,7 @@ class LearningProcess:
         :return: tuple
         """
 
-        successful = self.learning_state.successful
-        unsuccessful = self.learning_state.unsuccessful
-
-        return successful, unsuccessful
+        return self.learning_state.successful, self.learning_state.unsuccessful
 
     def prepare_next_round(self):
         """

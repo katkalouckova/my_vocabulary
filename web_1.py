@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request
 from my_vocabulary import MyVocabulary, AllWords
+from learning import LearningState, LearningProcess
 from util import check_input
 
 app = Flask(__name__)
 
 my_vocabulary = MyVocabulary(AllWords())
+learning_state = None
+learning_process = None
 
 
 @app.route('/')
@@ -24,6 +27,7 @@ def admin():
         * delete words from my vocabulary (one word)
         * delete selected words (one or more marked words)
     After each statement my vocabulary is saved.
+    :return: render_template
     """
 
     # message above input type text
@@ -69,3 +73,85 @@ def admin():
         message_mv=message_mv,
         chosen_words=my_vocabulary.chosen_words
         )
+
+
+@app.route('/learning')
+def learning():
+    """
+    Manages the process of learning.
+    :return: render_template
+    """
+
+    message = None
+    result = None
+    is_done = None
+    guess = None
+    successful = None
+    unsuccessful = None
+
+    global learning_state
+    global learning_process
+
+    if not learning_state:
+        learning_state = LearningState(my_vocabulary)
+        learning_process = LearningProcess(learning_state)
+
+    # No chosen_words
+    if not my_vocabulary.chosen_words:
+        message = "MY VOCABULARY is empty. Add some words."
+
+    else:
+
+        # User wants to continue with learning
+        if 'continue' in request.args:
+            # Ordered word from previous guessing is deleted
+            learning_state.delete_first_ordered_word()
+
+            # No more ordered_words
+            if not learning_state.ordered_words:
+
+                # Check, if is all learned
+                if learning_process.check_all_learned():
+                    successful, unsuccessful = learning_process.get_result()
+                    # TODO message about number of (un)successful attempts
+                    message = "Good job! You already know all words!"
+                    is_done = True
+                    learning_state = learning_state.reset()
+
+                else:
+                    # Next round
+                    learning_process.prepare_next_round()
+
+        if not is_done:
+            # New ordered_word
+            guess = learning_process.guess()
+
+        # The user enters guessed word
+        if 'enter-guessed' in request.args:
+            guessed = request.args['guessed']
+            guessed.strip()
+
+            # Guessed word
+            if learning_process.check_guessing(guess, guessed):
+                learning_process.guessed()
+                result = f'Right! Translation of "{guess}" is "{guessed}".'
+
+            else:
+                # Not guessed
+                learning_process.not_guessed(guess)
+                result = f'Wrong! Correct translation of "{guess}" is' \
+                         f'"{learning_state.words[guess]["value"]}".'
+
+    return render_template('learning.html',
+                                       message=message,
+                                       is_done=is_done,
+                                       result=result,
+                                       guess=guess,
+                                       successful=successful,
+                                       unsuccessful=unsuccessful)
+
+
+# Run the application if executed as main package
+if __name__ == '__main__':
+    # Run in debug mode
+    app.run(debug=True, host='0.0.0.0')

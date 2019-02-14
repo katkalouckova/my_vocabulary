@@ -1,5 +1,5 @@
 import pytest
-from learning_state import LearningState
+from learning import LearningState
 from my_vocabulary import MyVocabulary, AllWords
 
 
@@ -82,3 +82,23 @@ def test_all_mistakes(key):
         learning_state.words[word] = {'all_mistakes': all_mistakes}
 
     assert learning_state.all_mistakes(key) == util[key]
+
+
+def test_delete_first_ordered():
+    learning_state = __prepare()
+
+    learning_state.ordered_words = ["koupit", "postavit"]
+    learning_state.delete_first_ordered_word()
+
+    assert learning_state.ordered_words == ["postavit"]
+
+
+def test_clear():
+    my_vocabulary = MyVocabulary(AllWords)
+    my_vocabulary.chosen_words = {"koupit": "buy"}
+    learning_state = LearningState(my_vocabulary)
+    learning_state.words['koupit']['learned'] = True
+
+    learning_state.reset()
+
+    assert learning_state.words["koupit"]['learned'] is False

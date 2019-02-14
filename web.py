@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from dictionary import load_dictionary
 from data_manipulation import load_mv, add_word, delete_word, \
     delete_selected, save_mv
-from learning import prepare_learning, guess_word, check_all_learned, \
+from learning_0 import prepare_learning, guess_word, check_all_learned, \
     prepare_next_round
 
 # At the beginning some global variables are set
