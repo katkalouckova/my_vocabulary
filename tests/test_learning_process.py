@@ -1,6 +1,5 @@
 import pytest
-from learning_process import LearningProcess
-from learning_state import LearningState
+from learning import LearningProcess, LearningState
 from my_vocabulary import MyVocabulary, AllWords
 
 
