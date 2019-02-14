@@ -1,8 +1,8 @@
 def check_input(required_word):
 
-    if not required_word:
-        return None
+    if required_word:
+        required_word = str(required_word).strip()
+        return required_word
 
     else:
-        required_word = required_word.strip()
-        return required_word
+        return None
