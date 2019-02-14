@@ -32,7 +32,6 @@ def admin():
 
     # message above input type text
     message = None
-
     # message above table of MY VOCABULARY
     message_mv = None
 
@@ -40,31 +39,57 @@ def admin():
     if "add" in request.args:
         required_word = check_input(request.args['word'])
 
-        if not required_word:
-            message = "Add some word."
+        if required_word:
+            if my_vocabulary.exists_word(required_word):
+
+                if my_vocabulary.add_word(required_word):
+                    message = "The word has been successfully added."
+
+                else:
+                    message = "This word has been already added. " \
+                              "Try adding another word."
+
+            else:
+                message = "This word is not in used dictionary." \
+                          "Try adding another word."
+
         else:
-            message = my_vocabulary.add_word(required_word)
+            message = "Enter some word."
 
     # "Delete" submit button was pressed
     elif "delete" in request.args:
         required_word = check_input(request.args['word'])
 
-        if not required_word:
-            message = "Add some word."
+        if required_word:
+            if my_vocabulary.delete_word(required_word):
+                message = "This word has been successfully deleted."
+
+            else:
+                message = "This word is not in MY VOCABULARY. " \
+                          "Try deleting another word."
+
         else:
-            message = my_vocabulary.delete_word(required_word)
+            message = "Enter some word."
 
     # Some words were selected and submit button "Delete" was pressed
     elif "delete_selected" in request.args:
         required_words = request.args.getlist('select')
 
         if required_words:
-            message_mv = my_vocabulary.delete_selected(required_words)
+            deleted = my_vocabulary.delete_selected(required_words)
+
+            # One word deleted
+            if deleted == 1:
+                message = "Selected word has been successfully deleted."
+
+            # More words deleted
+            elif deleted > 1:
+                message = f'{deleted} words have been successfully deleted.'
         else:
             message_mv = "There are no selected words to delete."
 
     # No words in MY VOCABULARY
-    if not my_vocabulary.chosen_words:
+    if not message and not my_vocabulary.chosen_words:
         message = "MY VOCABULARY is empty. Enter some words."
 
     return render_template(

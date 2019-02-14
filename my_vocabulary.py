@@ -21,62 +21,57 @@ class MyVocabulary:
 
         self.source = source
 
+    def exists_word(self, required_word):
+        """
+        Checks, if the word exists in used dictionary
+        :param required_word: str, guessed word
+        :return: bool
+        """
+
+        return self.source.search(required_word)
+
     def add_word(self, required_word):
         """
-        Adds required_word into self.chosen words.
-        When required_word is already in self.chosen_words or when
-        required_word is not in self.source the function
-        returns an informative message.
-        :rtype: str
+        Adds required_word into self.chosen words and returns True.
+        When required_word is already in self.chosen_words, returns False.
         :param required_word: str, word which the user wants to add into
         self.chosen_words
-        :return: message about (un)successful addition
+        :return: bool
         """
 
-        # It is searched by keys
-        # The word is already in self.chosen_words
-        if required_word in self.chosen_words:
-            return ("This word has been already added. "
-                    "Try adding another word.")
-
         # Successfully addition
-        elif self.source.search(required_word):
+        if required_word not in self.chosen_words:
+            self.source.search(required_word)
             self.chosen_words[required_word] = self.source.value(required_word)
             self.save()
-            return "The word has been successfully added."
+            return True
 
         else:
-            # The word is not in self.source
-            return ("This word is not in used dictionary. "
-                    "Try adding another word.")
+            return False
 
     def delete_word(self, required_word):
         """
-        Deletes required_word from self.chosen_words.
-        :rtype: str
+        Deletes required_word from self.chosen_words and returns bool.
         :param required_word: word which the user wants to delete from
         self.chosen_words
-        :return: message about (un)successful deletion
+        :return: bool
         """
 
-        # It is searched by keys
-        # Required_word is deleted
+        # Successfully deletion
         if required_word in self.chosen_words:
             del self.chosen_words[required_word]
             self.save()
-            return "This word has been successfully deleted."
+            return True
 
         else:
-            # Required_word is not in selected dictionary
-            return ("This word is not in MY VOCABULARY. "
-                    "Try deleting another word.")
+            return False
 
     def delete_selected(self, required_words):
         """
         Deletes all required_words from self.chosen_words.
         :param required_words: words which the user wants to delete
         from self.chosen_words
-        :return: message about (un)successful deletion
+        :return: int
         """
 
         # Counter of deleted words
@@ -92,13 +87,7 @@ class MyVocabulary:
 
         self.save()
 
-        # One word deleted
-        if deleted == 1:
-            return "Selected word has been successfully deleted."
-
-        # More words deleted
-        elif deleted > 1:
-            return f'{deleted} words have been successfully deleted.'
+        return deleted
 
     def save(self):
         """
@@ -131,7 +120,6 @@ class AllWords:
 
     def search(self, required):
         return required in self.content
-
 
     def value(self, key):
         return self.content[key]
