@@ -35,57 +35,70 @@ def admin():
     # message above table of MY VOCABULARY
     message_mv = None
 
-    # The user pressed "Enter word" submit button
+    # The user pressed "Add word"
     if "add" in request.args:
         required_word = check_input(request.args['word'])
 
+        # There is some input
         if required_word:
+
+            # Check if tho word is in used dictionary
             if my_vocabulary.exists_word(required_word):
 
+                # Successful addition
                 if my_vocabulary.add_word(required_word):
                     message = "The word has been successfully added."
 
                 else:
+                    # Unsuccessful addition
                     message = "This word has been already added. " \
                               "Try adding another word."
 
             else:
+                # Not in used dictionary
                 message = "This word is not in used dictionary." \
                           "Try adding another word."
 
         else:
+            # Nothing was entered
             message = "Enter some word."
 
     # "Delete" submit button was pressed
     elif "delete" in request.args:
         required_word = check_input(request.args['word'])
 
+        # There is some input
         if required_word:
+            # Successful deletion
             if my_vocabulary.delete_word(required_word):
                 message = "This word has been successfully deleted."
 
             else:
+                # Unsuccessful addition
                 message = "This word is not in MY VOCABULARY. " \
                           "Try deleting another word."
 
         else:
+            # Nothing was entered
             message = "Enter some word."
 
     # Some words were selected and submit button "Delete" was pressed
     elif "delete_selected" in request.args:
         required_words = request.args.getlist('select')
 
+        # Successfully deletion
         if required_words:
             deleted = my_vocabulary.delete_selected(required_words)
 
             # One word deleted
             if deleted == 1:
-                message = "Selected word has been successfully deleted."
+                message_mv = "Selected word has been successfully deleted."
 
             # More words deleted
             elif deleted > 1:
-                message = f'{deleted} words have been successfully deleted.'
+                message_mv = f'{deleted} words have been successfully deleted.'
         else:
+            # Nothing was selected
             message_mv = "There are no selected words to delete."
 
     # No words in MY VOCABULARY
@@ -117,6 +130,7 @@ def learning():
     global learning_state
     global learning_process
 
+    # The instances are created only at the beginning of learning
     if not learning_state:
         learning_state = LearningState(my_vocabulary)
         learning_process = LearningProcess(learning_state)
@@ -156,7 +170,7 @@ def learning():
             guessed = request.args['guessed']
             guessed.strip()
 
-            # Guessed word
+            # Word is guessed
             if learning_process.check_guessing(guess, guessed):
                 learning_process.guessed()
                 result = f'Right! Translation of "{guess}" is "{guessed}".'

@@ -1,13 +1,21 @@
 from random import shuffle
-from my_vocabulary import MyVocabulary, AllWords
 
 
 class LearningState:
     """
-    A class for managing the process of learning.
+    A class for storage and work with information about the learning process.
     Instance attributes:
-        * self.chosen_words: words which I want to learn
-        * self.learning_state: contains information about learning process
+        * self.my_vocabulary: instance of class MyVocabulary
+        * self.round_mistakes: number of unsuccessfully guessing during round
+        * self.successful: number of successfully guessing during learning
+        * self.unsuccessful: number of unsuccessfully guessing during learning
+        * self.ordered_words: list of words which are offered in current round
+        * self.words: dictionary, contains all words which should be learned
+        and each word contains another dictionary with information about
+        each word:
+            - value - english equivalent
+            - learned - bool (the word is learned or not)
+            - all_mistakes - number of unsuccessfully guessing during learning
     """
 
     def __init__(self, my_vocabulary):
@@ -23,7 +31,6 @@ class LearningState:
             self.words[key] = {'value': value,
                                'learned': False,
                                'all_mistakes': 0}
-
 
     def round_mistakes_clear(self):
         """
@@ -43,7 +50,8 @@ class LearningState:
 
     def value(self, key):
         """
-        Returns a value to a word(key).
+        Returns a value of a word(key).
+        :param key: str, key from learning_state.words
         :return: str
         """
 
@@ -66,6 +74,7 @@ class LearningState:
     def set_learned(self, key):
         """
         Sets learned to True.
+        :param key: str, key from learning_state.words
         :return: None
         """
 
@@ -74,6 +83,7 @@ class LearningState:
     def all_mistakes(self, key):
         """
         Returns number of mistakes during learning of the word.
+        :param key: str, key from learning_state.words
         :return: int
         """
 
@@ -90,9 +100,10 @@ class LearningState:
     def reset(self):
         """
         Clears learning_state.
-        :return: new instance of this class
+        :return: None
         """
 
+        # TODO Is there another better way to reset everything in __init__?
         self.__init__(self.my_vocabulary)
 
 
@@ -116,8 +127,8 @@ class LearningProcess:
 
     def check_guessing(self, guess, guessed):
         """
-        Checks whether word is answered correctly and returns bool.
-        :param guess: str, first item from self.ordered_words
+        Checks whether the word is correctly answered and returns bool.
+        :param guess: str, word which should be guessed
         :param guessed: str, word which the user guessed
         :return: bool
         """
@@ -156,7 +167,7 @@ class LearningProcess:
 
     def get_result(self):
         """
-        Returns number od (un)successful attempts during guessing.
+        Returns number od (un)successful attempts during learning.
         :return: tuple
         """
 
@@ -165,10 +176,10 @@ class LearningProcess:
     def prepare_next_round(self):
         """
         Prepares next learning round:
-            * Clears counter self.learning_state.round_mistakes.
+            * Clears counter self.learning_state.round_mistakes
             * Clears and fills self.learning_state.ordered_words - list of
             words for next round (according to number of mistakes during
-            whole learning).
+            whole learning)
         :return: None
         """
 
@@ -178,6 +189,8 @@ class LearningProcess:
 
         for key in self.learning_state.words:
             if self.learning_state.words[key]['learned'] is False:
+                
+                # Dependency of frequency of offering each word
                 count = self.learning_state.words[key]['all_mistakes']
                 self.learning_state.ordered_words.extend([key] * count)
 

@@ -15,7 +15,7 @@ class MyVocabulary:
             with open('save_mv.txt', encoding='utf-8') as saved:
                 self.chosen_words = json.loads(saved.read())
 
-        # In such case new empty dictionary chosen_words is created
+        # Dictionary created
         except FileNotFoundError:
             self.chosen_words = {}
 
@@ -23,7 +23,7 @@ class MyVocabulary:
 
     def exists_word(self, required_word):
         """
-        Checks, if the word exists in used dictionary
+        Checks if the word exists in used dictionary.
         :param required_word: str, guessed word
         :return: bool
         """
@@ -51,7 +51,8 @@ class MyVocabulary:
 
     def delete_word(self, required_word):
         """
-        Deletes required_word from self.chosen_words and returns bool.
+        Deletes required_word from self.chosen_words and returns True.
+        When required_word is not in self.chosen_words, returns False.
         :param required_word: word which the user wants to delete from
         self.chosen_words
         :return: bool
@@ -68,7 +69,8 @@ class MyVocabulary:
 
     def delete_selected(self, required_words):
         """
-        Deletes all required_words from self.chosen_words.
+        Deletes all required_words from self.chosen_words and returns number
+        of deleted words.
         :param required_words: words which the user wants to delete
         from self.chosen_words
         :return: int
@@ -78,8 +80,6 @@ class MyVocabulary:
         deleted = 0
 
         # It is searched by keys
-        # All required_words are deleted
-        # 1 point is added to the counter after each deletion
         for required_word in required_words:
             if required_word in self.chosen_words:
                 del self.chosen_words[required_word]
@@ -119,7 +119,19 @@ class AllWords:
                         "koupit": "buy"}
 
     def search(self, required):
+        """
+        Checks if required is in self.content (used dictionary).
+        :param required: str, word which is searched
+        :return: bool
+        """
+
         return required in self.content
 
     def value(self, key):
+        """
+        Returns value of key from self.content (english equivalent).
+        :param key: str, key from sel.content (czech equivalent)
+        :return: str
+        """
+
         return self.content[key]
