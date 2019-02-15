@@ -152,9 +152,9 @@ def learning():
                 # Check, if is all learned
                 if learning_process.check_all_learned():
                     successful, unsuccessful = learning_process.get_result()
-                    # TODO message about number of (un)successful attempts
                     message = "Good job! You already know all words!"
                     is_done = True
+                    # TODO move message about (un)successful attempts from HTML
                     learning_state = learning_state.reset()
 
                 else:
