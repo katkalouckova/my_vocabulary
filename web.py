@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request
-from my_vocabulary import MyVocabulary, AllWords
+from my_vocabulary import MyVocabulary
 from learning import LearningState, LearningProcess
 from util import check_input
 
 app = Flask(__name__)
 
-my_vocabulary = MyVocabulary(AllWords())
+my_vocabulary = MyVocabulary()
 learning_state = None
 learning_process = None
 
@@ -19,13 +19,13 @@ def home():
 
 
 @app.route('/administration/')
-def admin():
+def administration():
     """
     Creates an administration page.
     Admin page contains possibilities, what can I do with chosen_words:
-        * enter words into my vocabulary (one word)
-        * delete words from my vocabulary (one word)
-        * delete selected words (one or more marked words)
+        * enter word into my vocabulary (one word)
+        * delete word from my vocabulary (one word)
+        * delete selected words (one or more selected words)
     After each statement my vocabulary is saved.
     :return: render_template
     """
@@ -39,67 +39,55 @@ def admin():
     if "add" in request.args:
         required_word = check_input(request.args['word'])
 
-        # There is some input
-        if required_word:
+        # Nothing was entered
+        if not required_word:
+            message = "Enter some word."
 
-            # Check if tho word is in used dictionary
-            if my_vocabulary.exists_word(required_word):
+        # Not in used dictionary
+        elif not my_vocabulary.word_is_in_dictionary(required_word):
+            message = "This word is not in used dictionary." \
+                      "Try adding another word."
 
-                # Successful addition
-                if my_vocabulary.add_word(required_word):
-                    message = "The word has been successfully added."
-
-                else:
-                    # Unsuccessful addition
-                    message = "This word has been already added. " \
-                              "Try adding another word."
-
-            else:
-                # Not in used dictionary
-                message = "This word is not in used dictionary." \
-                          "Try adding another word."
+        # Already in mv
+        elif my_vocabulary.word_is_in_mv(required_word):
+            message = "This word has been already added. " \
+                      "Try adding another word."
 
         else:
-            # Nothing was entered
-            message = "Enter some word."
+            # Successful addition
+            my_vocabulary.add_word(required_word)
+            message = "The word has been successfully added."
 
     # "Delete" submit button was pressed
     elif "delete" in request.args:
         required_word = check_input(request.args['word'])
 
-        # There is some input
-        if required_word:
-            # Successful deletion
-            if my_vocabulary.delete_word(required_word):
-                message = "This word has been successfully deleted."
-
-            else:
-                # Unsuccessful addition
-                message = "This word is not in MY VOCABULARY. " \
-                          "Try deleting another word."
-
-        else:
-            # Nothing was entered
+        # Nothing was entered
+        if not required_word:
             message = "Enter some word."
 
+        # Not in mv
+        elif not my_vocabulary.word_is_in_mv(required_word):
+            message = "This word is not in MY VOCABULARY. " \
+                      "Try deleting another word."
+
+        else:
+            # Successful deletion
+            my_vocabulary.delete_word(required_word)
+            message = "This word has been successfully deleted."
+
     # Some words were selected and submit button "Delete" was pressed
-    elif "delete_selected" in request.args:
+    elif "delete_words" in request.args:
         required_words = request.args.getlist('select')
 
-        # Successfully deletion
-        if required_words:
-            deleted = my_vocabulary.delete_selected(required_words)
-
-            # One word deleted
-            if deleted == 1:
-                message_mv = "Selected word has been successfully deleted."
-
-            # More words deleted
-            elif deleted > 1:
-                message_mv = f'{deleted} words have been successfully deleted.'
-        else:
-            # Nothing was selected
+        # Nothing was selected
+        if not required_words:
             message_mv = "There are no selected words to delete."
+
+        else:
+            # Successfully deletion
+            deleted = my_vocabulary.delete_words(required_words)
+            message_mv = f"Number of successfully deleted words: {deleted}"
 
     # No words in MY VOCABULARY
     if not message and not my_vocabulary.chosen_words:
@@ -181,13 +169,15 @@ def learning():
                 result = f'Wrong! Correct translation of "{guess}" is' \
                          f'"{learning_state.words[guess]["value"]}".'
 
-    return render_template('learning.html',
-                                       message=message,
-                                       is_done=is_done,
-                                       result=result,
-                                       guess=guess,
-                                       successful=successful,
-                                       unsuccessful=unsuccessful)
+    return render_template(
+        'learning.html',
+        message=message,
+        is_done=is_done,
+        result=result,
+        guess=guess,
+        successful=successful,
+        unsuccessful=unsuccessful
+        )
 
 
 # Run the application if executed as main package

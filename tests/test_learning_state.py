@@ -1,10 +1,10 @@
 import pytest
 from learning import LearningState
-from my_vocabulary import MyVocabulary, AllWords
+from my_vocabulary import MyVocabulary
 
 
 def __prepare():
-    return LearningState(MyVocabulary(AllWords()))
+    return LearningState(MyVocabulary())
 
 
 @pytest.mark.parametrize("round_mistakes", [0, 3, 100])
@@ -28,7 +28,7 @@ def test_increment_successful(successful):
                           ("postavit", "build")],
                          )
 def test_value(key, value):
-    my_vocabulary = MyVocabulary(AllWords)
+    my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
     learning_state = LearningState(my_vocabulary)
@@ -94,7 +94,7 @@ def test_delete_first_ordered():
 
 
 def test_clear():
-    my_vocabulary = MyVocabulary(AllWords)
+    my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy"}
     learning_state = LearningState(my_vocabulary)
     learning_state.words['koupit']['learned'] = True
