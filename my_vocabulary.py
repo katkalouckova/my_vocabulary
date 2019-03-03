@@ -50,7 +50,7 @@ class MyVocabulary(Dictionary):
     def __init__(self):
         try:
             # When there is saved chosen_words, it is loaded
-            with open('save_mv.txt', encoding='utf-8') as saved:
+            with open('save_my_vocabulary.txt', encoding='utf-8') as saved:
                 self.chosen_words = json.loads(saved.read())
 
         # Dictionary created
@@ -77,7 +77,7 @@ class MyVocabulary(Dictionary):
         """
 
         self.chosen_words[required_word] = self.get_value(required_word)
-        self.save_mv()
+        self.save_my_vocabulary()
 
     def delete_word(self, required_word):
         """
@@ -88,7 +88,7 @@ class MyVocabulary(Dictionary):
         """
 
         del self.chosen_words[required_word]
-        self.save_mv()
+        self.save_my_vocabulary()
 
     def delete_words(self, required_words):
         """
@@ -107,15 +107,15 @@ class MyVocabulary(Dictionary):
             del self.chosen_words[required_word]
             deleted += 1
 
-        self.save_mv()
+        self.save_my_vocabulary()
 
         return deleted
 
-    def save_mv(self):
+    def save_my_vocabulary(self):
         """
         Saves self.chosen_words to the disk.
         """
 
-        with open('save_mv.txt', mode='w', encoding='utf-8') as saved:
+        with open('save_my_vocabulary.txt', mode='w', encoding='utf-8') as saved:
             saved_vocabulary = json.dumps(self.chosen_words)
             print(saved_vocabulary, file=saved)

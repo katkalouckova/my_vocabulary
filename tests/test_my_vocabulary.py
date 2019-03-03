@@ -92,7 +92,7 @@ def test_save_mv():
     my_vocabulary = __prepare()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
-    my_vocabulary.save_mv()
+    my_vocabulary.save_my_vocabulary()
 
     # Three following lines get what was written to the file
     string = ''

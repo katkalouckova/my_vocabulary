@@ -16,6 +16,7 @@ class LearningState:
         each word:
             - value - english equivalent
             - learned - bool (the word is learned or not)
+            - round_mistakes - number of unsuccessfully guessing during round
             - total_mistakes - number of unsuccessfully guessing during learning
     """
 
@@ -197,9 +198,28 @@ class LearningProcess:
         :return: None
         """
 
+        self.learning_state.words[key]['round_mistakes'] += 1
         self.learning_state.words[key]['total_mistakes'] += 1
         self.learning_state.unsuccessful += 1
         self.learning_state.round_mistakes += 1
+
+    def check_word_learned(self, key):
+        """
+        Checks whether the word is learned.
+        :return: bool
+        """
+
+        return self.learning_state.words[key]['round_mistakes'] == 0
+
+    def set_words_learned(self):
+        """
+        Sets learned of all words which are learned to True
+        :return: None
+        """
+
+        for i in self.learning_state.words:
+            if self.check_word_learned(i):
+                self.learning_state.set_learned(i)
 
     def is_all_learned(self):
         """
@@ -228,6 +248,8 @@ class LearningProcess:
         """
 
         self.learning_state.round_mistakes_clear()
+        for i in self.learning_state.words:
+            self.learning_state.words[i]['round_mistakes'] = 0
 
         self.learning_state.ordered_words = []
 

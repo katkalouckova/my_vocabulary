@@ -139,6 +139,7 @@ def learning():
                 learning_state = learning_state.reset_learning_state()
 
             else:
+                learning_process.set_words_learned()
                 # Next round
                 learning_process.prepare_next_round()
 
