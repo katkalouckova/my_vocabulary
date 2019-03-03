@@ -1,13 +1,10 @@
 from flask import Flask, render_template, request
+import json
 from my_vocabulary import MyVocabulary
 from learning import LearningState, LearningProcess
 from util import check_input
 
 app = Flask(__name__)
-
-my_vocabulary = MyVocabulary()
-learning_state = None
-learning_process = None
 
 
 @app.route('/')
@@ -29,6 +26,8 @@ def administration():
     After each statement my vocabulary is saved.
     :return: render_template
     """
+
+    my_vocabulary = MyVocabulary()
 
     # message above input type text
     message = None
@@ -115,20 +114,16 @@ def learning():
     successful = None
     unsuccessful = None
 
-    global learning_state
-    global learning_process
-
-    # The instances are created only at the beginning of learning
-    if not learning_state:
-        learning_state = LearningState(my_vocabulary)
-        learning_process = LearningProcess(learning_state)
+    my_vocabulary = MyVocabulary()
+    learning_state = LearningState(my_vocabulary)
+    learning_process = LearningProcess(learning_state)
 
     # No chosen_words
     if not my_vocabulary.chosen_words:
         message = "MY VOCABULARY is empty. Add some words."
 
     # User wants to continue with learning
-    elif 'continue' in request.args:
+    if 'continue' in request.args:
         # Ordered word from previous guessing is deleted
         learning_state.delete_first_ordered_word()
 
@@ -147,12 +142,12 @@ def learning():
                 # Next round
                 learning_process.prepare_next_round()
 
-        if not is_done:
-            # New ordered_word
-            guess = learning_process.get_offered_word()
+    if not is_done:
+        # New ordered_word
+        guess = learning_process.get_offered_word()
 
     # The user enters guessed word
-    elif 'enter-guessed' in request.args:
+    if 'enter-guessed' in request.args:
         guessed = request.args['guessed']
         guessed.strip()
 
@@ -165,7 +160,7 @@ def learning():
             # Not guessed
             learning_process.increment_fail_counters(guess)
             result = f'Wrong! Correct translation of "{guess}" is' \
-                     f'"{learning_state.words[guess]["value"]}".'
+                     f' "{learning_state.words[guess]["value"]}".'
 
     return render_template(
         'learning.html',

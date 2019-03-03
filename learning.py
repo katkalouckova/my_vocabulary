@@ -1,4 +1,5 @@
 from random import shuffle
+import json
 
 
 class LearningState:
@@ -20,17 +21,21 @@ class LearningState:
 
     def __init__(self, my_vocabulary):
         self.my_vocabulary = my_vocabulary
-        self.round_mistakes = 0
-        self.successful = 0
-        self.unsuccessful = 0
-        self.ordered_words = list(self.my_vocabulary.chosen_words.keys())
 
-        self.words = {}
+        try:
+            # When there is saved learning_state, it is loaded
+            with open('save_ls.txt', encoding='utf-8') as saved:
+                learning_state = json.loads(saved.read())
 
-        for key, value in self.my_vocabulary.chosen_words.items():
-            self.words[key] = {'value': value,
-                               'learned': False,
-                               'total_mistakes': 0}
+            self.round_mistakes = learning_state['round_mistakes']
+            self.successful = learning_state['successful']
+            self.unsuccessful = learning_state['unsuccessful']
+            self.ordered_words = learning_state['ordered_words']
+            self.words = learning_state['words']
+
+        # learning_state created
+        except (FileNotFoundError, ValueError):
+            self.reset_learning_state()
 
     def round_mistakes_clear(self):
         """
@@ -97,14 +102,53 @@ class LearningState:
 
         del self.ordered_words[0]
 
+    def learning_state(self):
+        """
+        Creates a dictionary with instance attributes.
+        :return: dict
+        """
+
+        learning_state = {
+            'round_mistakes': self.round_mistakes,
+            'successful': self.successful,
+            'unsuccessful': self.unsuccessful,
+            'ordered_words': self.ordered_words,
+            'words': self.words
+        }
+
+        return learning_state
+
+    def save_learning_state(self):
+        """
+        Saves self to the disk.
+        :return: None
+        """
+
+        with open('save_ls.txt', mode='w', encoding='utf-8') as saved:
+            saved_learning_state = json.dumps(self.learning_state())
+            print(saved_learning_state, file=saved)
+
     def reset_learning_state(self):
         """
         Clears learning_state.
         :return: None
         """
 
-        # TODO Is there another better way to reset everything in __init__?
-        self.__init__(self.my_vocabulary)
+        self.round_mistakes = 0
+        self.successful = 0
+        self.unsuccessful = 0
+        self.ordered_words = list(self.my_vocabulary.chosen_words.keys())
+
+        self.words = {}
+
+        for key, value in self.my_vocabulary.chosen_words.items():
+            self.words[key] = {'value': value,
+                               'learned': False,
+                               'round_mistakes': 0,
+                               'total_mistakes': 0}
+
+    def __del__(self):
+        self.save_learning_state()
 
 
 class LearningProcess:
