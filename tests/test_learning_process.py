@@ -8,7 +8,7 @@ from my_vocabulary import MyVocabulary
                           ("být", "be"),
                           ("postavit", "build")],
                          )
-def test_guess_word_successfully(guess, guessed):
+def test_check_guessing_successfully(guess, guessed):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
@@ -23,7 +23,7 @@ def test_guess_word_successfully(guess, guessed):
                           ("být", "bee"),
                           ("postavit", "buil")],
                          )
-def test_guess_word_unsuccessfully(guess, guessed):
+def test_check_guessing_unsuccessfully(guess, guessed):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
@@ -33,52 +33,52 @@ def test_guess_word_unsuccessfully(guess, guessed):
     assert not learning_process.check_guessing(guess, guessed)
 
 
-def test_guessed():
+def test_success_counter():
     learning_state = LearningState(MyVocabulary())
     s = learning_state.successful
 
     learning_process = LearningProcess(learning_state)
-    learning_process.guessed()
+    learning_process.increment_success_counter()
 
     assert learning_state.successful == s + 1
 
 
 @pytest.mark.parametrize("key", ["koupit", "být", "postavit"])
-def test_not_guessed(key):
+def test_fail_counters(key):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
 
     learning_state = LearningState(my_vocabulary)
-    a = learning_state.words[key]['all_mistakes']
+    a = learning_state.words[key]['total_mistakes']
     u = learning_state.unsuccessful
     r = learning_state.round_mistakes
 
     learning_process = LearningProcess(learning_state)
-    learning_process.not_guessed(key)
+    learning_process.increment_fail_counters(key)
 
-    assert learning_state.words[key]['all_mistakes'] == a + 1
+    assert learning_state.words[key]['total_mistakes'] == a + 1
     assert learning_state.round_mistakes == r + 1
     assert learning_state.unsuccessful == u + 1
 
 
-def test_check_all_learned_true():
+def test_is_all_learned_true():
     learning_state = LearningState(MyVocabulary())
     learning_state.round_mistakes = 0
 
     learning_process = LearningProcess(learning_state)
 
-    assert learning_process.check_all_learned() is True
+    assert learning_process.is_all_learned() is True
 
 
 @pytest.mark.parametrize("number", [1, 10, 30])
-def test_check_all_learned_false(number):
+def test_is_all_learned_false(number):
     learning_state = LearningState(MyVocabulary())
     learning_state.round_mistakes = number
 
     learning_process = LearningProcess(learning_state)
 
-    assert learning_process.check_all_learned() is False
+    assert learning_process.is_all_learned() is False
 
 
 def test_get_result():
@@ -95,11 +95,11 @@ def test_prepare_next_round():
     learning_state = LearningState(MyVocabulary())
     learning_state.round_mistakes = 2
     learning_state.words = {"koupit": {"learned": False,
-                                       "all_mistakes": 2},
+                                       "total_mistakes": 2},
                             "být": {"learned": True,
-                                    "all_mistakes": 1},
+                                    "total_mistakes": 1},
                             "postavit": {"learned": False,
-                                         "all_mistakes": 2}}
+                                         "total_mistakes": 2}}
 
     learning_process = LearningProcess(learning_state)
     learning_process.prepare_next_round()

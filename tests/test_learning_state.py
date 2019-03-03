@@ -27,15 +27,15 @@ def test_increment_successful(successful):
                           ("být", "be"),
                           ("postavit", "build")],
                          )
-def test_value(key, value):
+def test_get_value(key, value):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
     learning_state = LearningState(my_vocabulary)
-    assert learning_state.value(key) == value
+    assert learning_state.get_value(key) == value
 
 
-def test_unlearned():
+def test_get_unlearned():
     learning_state = __prepare()
 
     util = {"koupit": False, "být": True, "postavit": False}
@@ -49,7 +49,7 @@ def test_unlearned():
         if learned is False:
             unlearned.append(word)
 
-    assert learning_state.unlearned() == unlearned
+    assert learning_state.get_unlearned() == unlearned
 
 
 @pytest.mark.parametrize("key", ["koupit", "být", "postavit"])
@@ -70,7 +70,7 @@ def test_set_learned(key):
 
 
 @pytest.mark.parametrize("key", ["koupit", "být", "postavit"])
-def test_all_mistakes(key):
+def test_total_mistakes(key):
     learning_state = __prepare()
 
     util = {"koupit": 2, "být": 9, "postavit": 0}
@@ -79,9 +79,9 @@ def test_all_mistakes(key):
     learning_state.words = {}
 
     for word, all_mistakes in util.items():
-        learning_state.words[word] = {'all_mistakes': all_mistakes}
+        learning_state.words[word] = {'total_mistakes': all_mistakes}
 
-    assert learning_state.all_mistakes(key) == util[key]
+    assert learning_state.total_mistakes(key) == util[key]
 
 
 def test_delete_first_ordered():
@@ -93,12 +93,12 @@ def test_delete_first_ordered():
     assert learning_state.ordered_words == ["postavit"]
 
 
-def test_clear():
+def test_reset_learning_state():
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy"}
     learning_state = LearningState(my_vocabulary)
     learning_state.words['koupit']['learned'] = True
 
-    learning_state.reset()
+    learning_state.reset_learning_state()
 
     assert learning_state.words["koupit"]['learned'] is False

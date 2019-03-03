@@ -127,47 +127,45 @@ def learning():
     if not my_vocabulary.chosen_words:
         message = "MY VOCABULARY is empty. Add some words."
 
-    else:
+    # User wants to continue with learning
+    elif 'continue' in request.args:
+        # Ordered word from previous guessing is deleted
+        learning_state.delete_first_ordered_word()
 
-        # User wants to continue with learning
-        if 'continue' in request.args:
-            # Ordered word from previous guessing is deleted
-            learning_state.delete_first_ordered_word()
+        # No more ordered_words
+        if not learning_state.ordered_words:
 
-            # No more ordered_words
-            if not learning_state.ordered_words:
+            # Check, if is all learned
+            if learning_process.is_all_learned():
+                successful, unsuccessful = learning_process.get_result()
+                message = "Good job! You already know all words!"
+                is_done = True
+                # TODO move message about (un)successful attempts from HTML
+                learning_state = learning_state.reset_learning_state()
 
-                # Check, if is all learned
-                if learning_process.check_all_learned():
-                    successful, unsuccessful = learning_process.get_result()
-                    message = "Good job! You already know all words!"
-                    is_done = True
-                    # TODO move message about (un)successful attempts from HTML
-                    learning_state = learning_state.reset()
-
-                else:
-                    # Next round
-                    learning_process.prepare_next_round()
+            else:
+                # Next round
+                learning_process.prepare_next_round()
 
         if not is_done:
             # New ordered_word
-            guess = learning_process.guess()
+            guess = learning_process.get_offered_word()
 
-        # The user enters guessed word
-        if 'enter-guessed' in request.args:
-            guessed = request.args['guessed']
-            guessed.strip()
+    # The user enters guessed word
+    elif 'enter-guessed' in request.args:
+        guessed = request.args['guessed']
+        guessed.strip()
 
-            # Word is guessed
-            if learning_process.check_guessing(guess, guessed):
-                learning_process.guessed()
-                result = f'Right! Translation of "{guess}" is "{guessed}".'
+        # Word is guessed
+        if learning_process.check_guessing(guess, guessed):
+            learning_process.increment_success_counter()
+            result = f'Right! Translation of "{guess}" is "{guessed}".'
 
-            else:
-                # Not guessed
-                learning_process.not_guessed(guess)
-                result = f'Wrong! Correct translation of "{guess}" is' \
-                         f'"{learning_state.words[guess]["value"]}".'
+        else:
+            # Not guessed
+            learning_process.increment_fail_counters(guess)
+            result = f'Wrong! Correct translation of "{guess}" is' \
+                     f'"{learning_state.words[guess]["value"]}".'
 
     return render_template(
         'learning.html',

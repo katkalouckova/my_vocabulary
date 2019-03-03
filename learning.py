@@ -15,7 +15,7 @@ class LearningState:
         each word:
             - value - english equivalent
             - learned - bool (the word is learned or not)
-            - all_mistakes - number of unsuccessfully guessing during learning
+            - total_mistakes - number of unsuccessfully guessing during learning
     """
 
     def __init__(self, my_vocabulary):
@@ -30,7 +30,7 @@ class LearningState:
         for key, value in self.my_vocabulary.chosen_words.items():
             self.words[key] = {'value': value,
                                'learned': False,
-                               'all_mistakes': 0}
+                               'total_mistakes': 0}
 
     def round_mistakes_clear(self):
         """
@@ -48,7 +48,7 @@ class LearningState:
 
         self.successful += 1
 
-    def value(self, key):
+    def get_value(self, key):
         """
         Returns a value of a word(key).
         :param key: str, key from learning_state.words
@@ -57,7 +57,7 @@ class LearningState:
 
         return self.words[key]['value']
 
-    def unlearned(self):
+    def get_unlearned(self):
         """
         Returns the list of unlearned words.
         :return: list
@@ -80,14 +80,14 @@ class LearningState:
 
         self.words[key]['learned'] = True
 
-    def all_mistakes(self, key):
+    def total_mistakes(self, key):
         """
         Returns number of mistakes during learning of the word.
         :param key: str, key from learning_state.words
         :return: int
         """
 
-        return self.words[key]['all_mistakes']
+        return self.words[key]['total_mistakes']
 
     def delete_first_ordered_word(self):
         """
@@ -97,7 +97,7 @@ class LearningState:
 
         del self.ordered_words[0]
 
-    def reset(self):
+    def reset_learning_state(self):
         """
         Clears learning_state.
         :return: None
@@ -117,7 +117,7 @@ class LearningProcess:
     def __init__(self, learning_state):
         self.learning_state = learning_state
 
-    def guess(self):
+    def get_offered_word(self):
         """
         Returns first item from self.ordered_words(for guessing).
         :return: str
@@ -133,9 +133,9 @@ class LearningProcess:
         :return: bool
         """
 
-        return self.learning_state.value(guess) == guessed
+        return self.learning_state.get_value(guess) == guessed
 
-    def guessed(self):
+    def increment_success_counter(self):
         """
         Increments learning_state.successful counter.
         :return: None
@@ -143,21 +143,21 @@ class LearningProcess:
 
         self.learning_state.increment_successful()
 
-    def not_guessed(self, key):
+    def increment_fail_counters(self, key):
         """
         Increments counters:
-            * learning_state.words[key]['all_mistakes']
+            * learning_state.words[key]['total_mistakes']
             * learning_state.unsuccessful
             * learning_state.round_mistakes
         :param key: str, key from learning_state.words
         :return: None
         """
 
-        self.learning_state.words[key]['all_mistakes'] += 1
+        self.learning_state.words[key]['total_mistakes'] += 1
         self.learning_state.unsuccessful += 1
         self.learning_state.round_mistakes += 1
 
-    def check_all_learned(self):
+    def is_all_learned(self):
         """
         Checks whether all words have been learned.
         :return: bool
@@ -191,7 +191,7 @@ class LearningProcess:
             if self.learning_state.words[key]['learned'] is False:
                 
                 # Dependency of frequency of offering each word
-                count = self.learning_state.words[key]['all_mistakes']
+                count = self.learning_state.words[key]['total_mistakes']
                 self.learning_state.ordered_words.extend([key] * count)
 
         shuffle(self.learning_state.ordered_words)
