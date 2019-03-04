@@ -3,34 +3,34 @@ from learning import LearningProcess, LearningState
 from my_vocabulary import MyVocabulary
 
 
-@pytest.mark.parametrize(["guess", "guessed"],
+@pytest.mark.parametrize(["offered_word", "answered_word"],
                          [("koupit", "buy"),
                           ("být", "be"),
                           ("postavit", "build")],
                          )
-def test_check_guessing_successfully(guess, guessed):
+def test_check_guessing_successfully(offered_word, answered_word):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
 
     learning_process = LearningProcess(LearningState(my_vocabulary))
 
-    assert learning_process.check_guessing(guess, guessed)
+    assert learning_process.check_guessing(offered_word, answered_word)
 
 
-@pytest.mark.parametrize(["guess", "guessed"],
+@pytest.mark.parametrize(["offered_word", "answered_word"],
                          [("koupit", "koupit"),
                           ("být", "bee"),
                           ("postavit", "buil")],
                          )
-def test_check_guessing_unsuccessfully(guess, guessed):
+def test_check_guessing_unsuccessfully(offered_word, answered_word):
     my_vocabulary = MyVocabulary()
     my_vocabulary.chosen_words = {"koupit": "buy", "být": "be",
                                   "postavit": "build"}
 
     learning_process = LearningProcess(LearningState(my_vocabulary)
                                        )
-    assert not learning_process.check_guessing(guess, guessed)
+    assert not learning_process.check_guessing(offered_word, answered_word)
 
 
 def test_success_counter():

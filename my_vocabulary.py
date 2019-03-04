@@ -32,7 +32,7 @@ class Dictionary:
     def get_value(self, key):
         """
         Returns value of key from self.content (english equivalent).
-        :param key: str, key from sel.content (czech equivalent)
+        :param key: str, key from self.content (czech equivalent)
         :return: str
         """
 

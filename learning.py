@@ -170,15 +170,15 @@ class LearningProcess:
 
         return self.learning_state.ordered_words[0]
 
-    def check_guessing(self, guess, guessed):
+    def check_guessing(self, offered_word, answered_word):
         """
         Checks whether the word is correctly answered and returns bool.
-        :param guess: str, word which should be guessed
-        :param guessed: str, word which the user guessed
+        :param offered_word: str, word which should be guessed
+        :param answered_word: str, word which the user guessed
         :return: bool
         """
 
-        return self.learning_state.get_value(guess) == guessed
+        return self.learning_state.get_value(offered_word) == answered_word
 
     def increment_success_counter(self):
         """

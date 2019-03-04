@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-import json
 from my_vocabulary import MyVocabulary
 from learning import LearningState, LearningProcess
 from util import check_input
@@ -107,10 +106,15 @@ def learning():
     :return: render_template
     """
 
+    """
+    learning_controller = LearningController():
+    
+    """
+
     message = None
     result = None
     is_done = None
-    guess = None
+    offered_word = None
     successful = None
     unsuccessful = None
 
@@ -145,30 +149,31 @@ def learning():
 
     if not is_done:
         # New ordered_word
-        guess = learning_process.get_offered_word()
+        offered_word = learning_process.get_offered_word()
 
     # The user enters guessed word
-    if 'enter-guessed' in request.args:
-        guessed = request.args['guessed']
-        guessed.strip()
+    if 'enter-answered' in request.args:
+        answered_word = request.args['answered_word']
+        answered_word.strip()
 
         # Word is guessed
-        if learning_process.check_guessing(guess, guessed):
+        if learning_process.check_guessing(offered_word, answered_word):
             learning_process.increment_success_counter()
-            result = f'Right! Translation of "{guess}" is "{guessed}".'
+            result = f'Right! Translation of "{offered_word}" is ' \
+                     f'"{answered_word}".'
 
         else:
             # Not guessed
-            learning_process.increment_fail_counters(guess)
-            result = f'Wrong! Correct translation of "{guess}" is' \
-                     f' "{learning_state.words[guess]["value"]}".'
+            learning_process.increment_fail_counters(offered_word)
+            result = f'Wrong! Correct translation of "{offered_word}" is' \
+                     f' "{learning_state.words[offered_word]["value"]}".'
 
     return render_template(
         'learning.html',
         message=message,
         is_done=is_done,
         result=result,
-        guess=guess,
+        offered_word=offered_word,
         successful=successful,
         unsuccessful=unsuccessful
         )
