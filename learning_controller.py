@@ -3,9 +3,10 @@ import os
 from flask import render_template
 from my_vocabulary import MyVocabulary
 from learning import LearningState, LearningProcess
+from base_controller import BaseController
 
 
-class LearningController:
+class LearningController(BaseController):
     """
     A class for managing learning process with requests from the user
     and preparing html render_template.
@@ -24,6 +25,7 @@ class LearningController:
     """
 
     def __init__(self, request):
+        super().__init__(request)
         self.message = None
         self.offered_word = None
         self.answered_word = None
@@ -35,17 +37,6 @@ class LearningController:
         self.my_vocabulary = MyVocabulary()
         self.learning_state = LearningState(self.my_vocabulary)
         self.learning_process = LearningProcess(self.learning_state)
-
-        self.request = request
-
-    def check_request(self, arg):
-        """
-        Checks whether arg is in requests.args.
-        :param arg: string which is searched in requests.args
-        :return: bool
-        """
-
-        return arg in self.request.args
 
     def prepare_the_end(self):
         """
@@ -149,8 +140,8 @@ class LearningController:
 
     def prepare_render_template(self):
         """
-        Returns render_template.
-        :return:
+        Returns render_template for learning page.
+        :return: str
         """
 
         return render_template(
