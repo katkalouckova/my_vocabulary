@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from my_vocabulary import MyVocabulary
-from learning import LearningState, LearningProcess
+from learning_controller import LearningController
 from util import check_input
 
 app = Flask(__name__)
@@ -106,77 +106,11 @@ def learning():
     :return: render_template
     """
 
-    """
-    learning_controller = LearningController():
-    
-    """
+    learning_controller = LearningController(request)
 
-    message = None
-    result = None
-    is_done = None
-    offered_word = None
-    successful = None
-    unsuccessful = None
+    learning_controller.handle_learning_controller()
 
-    my_vocabulary = MyVocabulary()
-    learning_state = LearningState(my_vocabulary)
-    learning_process = LearningProcess(learning_state)
-
-    # No chosen_words
-    if not my_vocabulary.chosen_words:
-        message = "MY VOCABULARY is empty. Add some words."
-
-    # User wants to continue with learning
-    if 'continue' in request.args:
-        # Ordered word from previous guessing is deleted
-        learning_state.delete_first_ordered_word()
-
-        # No more ordered_words
-        if not learning_state.ordered_words:
-
-            # Check, if is all learned
-            if learning_process.is_all_learned():
-                successful, unsuccessful = learning_process.get_result()
-                message = "Good job! You already know all words!"
-                is_done = True
-                # TODO move message about (un)successful attempts from HTML
-                learning_state = learning_state.reset_learning_state()
-
-            else:
-                learning_process.set_words_learned()
-                # Next round
-                learning_process.prepare_next_round()
-
-    if not is_done:
-        # New ordered_word
-        offered_word = learning_process.get_offered_word()
-
-    # The user enters guessed word
-    if 'enter-answered' in request.args:
-        answered_word = request.args['answered_word']
-        answered_word.strip()
-
-        # Word is guessed
-        if learning_process.check_guessing(offered_word, answered_word):
-            learning_process.increment_success_counter()
-            result = f'Right! Translation of "{offered_word}" is ' \
-                     f'"{answered_word}".'
-
-        else:
-            # Not guessed
-            learning_process.increment_fail_counters(offered_word)
-            result = f'Wrong! Correct translation of "{offered_word}" is' \
-                     f' "{learning_state.words[offered_word]["value"]}".'
-
-    return render_template(
-        'learning.html',
-        message=message,
-        is_done=is_done,
-        result=result,
-        offered_word=offered_word,
-        successful=successful,
-        unsuccessful=unsuccessful
-        )
+    return learning_controller.prepare_render_template()
 
 
 # Run the application if executed as main package

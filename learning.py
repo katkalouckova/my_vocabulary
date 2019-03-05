@@ -25,7 +25,7 @@ class LearningState:
 
         try:
             # When there is saved learning_state, it is loaded
-            with open('save_ls.txt', encoding='utf-8') as saved:
+            with open('save_learning_state.txt', encoding='utf-8') as saved:
                 learning_state = json.loads(saved.read())
 
             self.round_mistakes = learning_state['round_mistakes']
@@ -125,7 +125,7 @@ class LearningState:
         :return: None
         """
 
-        with open('save_ls.txt', mode='w', encoding='utf-8') as saved:
+        with open('save_learning_state.txt', mode='w', encoding='utf-8') as saved:
             saved_learning_state = json.dumps(self.learning_state())
             print(saved_learning_state, file=saved)
 
@@ -167,7 +167,6 @@ class LearningProcess:
         Returns first item from self.ordered_words(for guessing).
         :return: str
         """
-
         return self.learning_state.ordered_words[0]
 
     def check_guessing(self, offered_word, answered_word):
@@ -247,6 +246,7 @@ class LearningProcess:
         :return: None
         """
 
+        self.set_words_learned()
         self.learning_state.round_mistakes_clear()
         for i in self.learning_state.words:
             self.learning_state.words[i]['round_mistakes'] = 0
