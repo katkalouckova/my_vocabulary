@@ -12,7 +12,7 @@ def __prepare():
 
 def __mock():
     # Don't save changes in chosen_words
-    flexmock(MyVocabulary, save_mv=lambda: None)
+    flexmock(MyVocabulary, save_my_vocabulary=lambda: None)
 
 
 def __mock_and_prepare():
@@ -86,7 +86,7 @@ def test_delete_words_three_selected(key):
     assert my_vocabulary.delete_words(key) == 3
 
 
-def test_save_mv():
+def test_save_my_vocabulary():
     fake_file = mock_open(read_data='{}')
     flexmock(builtins, open=fake_file)
     my_vocabulary = __prepare()

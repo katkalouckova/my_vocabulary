@@ -20,15 +20,15 @@ class AdminController(BaseController):
         self.message = None
         self.message_mv = None
 
-    def process_add(self, arg):
+    def process_add(self):
         """
         Processes what should happen when the user presses "add"
-        (successfully deletion and various situations of unsuccessfully
+        (successful deletion and various situations of unsuccessful
         deletion).
         :return: None
         """
 
-        required_word = self.check_input(arg)
+        required_word = self.get_required_word('word')
 
         # Nothing was entered
         if not required_word:
@@ -36,10 +36,10 @@ class AdminController(BaseController):
 
         # Not in used dictionary
         elif not self.my_vocabulary.word_is_in_dictionary(required_word):
-            self.message = "This word is not in used dictionary." \
+            self.message = "This word is not in used dictionary. " \
                            "Try adding another word."
 
-        # Already in mv
+        # Already in my vocabulary
         elif self.my_vocabulary.word_is_in_mv(required_word):
             self.message = "This word has been already added. " \
                            "Try adding another word."
@@ -49,16 +49,15 @@ class AdminController(BaseController):
             self.my_vocabulary.add_word(required_word)
             self.message = "The word has been successfully added."
 
-    def process_delete_word(self, arg):
+    def process_delete_word(self):
         """
         Processes what should happen when the user presses "delete"
         (successfully deletion and various situations of unsuccessfully
         deletion).
-        :param arg: name of the request
         :return: None
         """
 
-        required_word = self.check_input(arg)
+        required_word = self.get_required_word('word')
 
         # Nothing was entered
         if not required_word:
@@ -77,7 +76,7 @@ class AdminController(BaseController):
     def process_delete_words(self):
         """
         Processes what should happen when the user presses "delete_words"
-        (successfully deletion and various situations of unsuccessfully
+        (successful deletion and various situations of unsuccessful
         deletion).
         :return: None
         """
@@ -101,15 +100,15 @@ class AdminController(BaseController):
         """
 
         # The user pressed "Add word"
-        if self.check_request('add'):
-            self.process_add('add')
+        if self.is_in_args('add'):
+            self.process_add()
 
         # "Delete" submit button was pressed
-        elif self.check_request('delete'):
-            self.process_delete_word('delete')
+        elif self.is_in_args('delete'):
+            self.process_delete_word()
 
         # Some words were selected and submit button "Delete" was pressed
-        elif self.check_request('delete_words'):
+        elif self.is_in_args('delete_words'):
             self.process_delete_words()
 
         # No words in MY VOCABULARY

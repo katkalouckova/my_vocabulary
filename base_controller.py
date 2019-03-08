@@ -6,21 +6,20 @@ class BaseController:
     def __init__(self, request):
         self.request = request
 
-    def check_request(self, arg):
+    def is_in_args(self, arg):
         """
         Checks whether arg is in requests.args.
-        :param arg: name of the request
+        :param arg: argument name in the request
         :return: bool
         """
 
         return arg in self.request.args
 
-    def check_input(self, arg):
+    def get_required_word(self, arg):
         """
-        When there is something in input, the input is transformed to string,
-        stripped and returned,
-        otherwise is returned None.
-        :param arg: name of the request
+        Returns stripped input; when there is nothing in input, None
+        is returned.
+        :param arg: argument name in the request
         :return: str/None
         """
 

@@ -16,10 +16,10 @@ class LearningController(BaseController):
         * self.answered_word: word which the user enters
         * self.is_done: information about the end of learning
         * self.result: message about result of learning
-        * self.successful: number of successfully guessing during learning
-        * self.unsuccessful: number of unsuccessfully guessing during learning
+        * self.successful: number of successful guessing during learning
+        * self.unsuccessful: number of unsuccessful guessing during learning
         * self.my_vocabulary: instance of the class MyVocabulary
-        * self.learning_state: instance of the class Learning_state
+        * self.learning_state: instance of the class LearningState
         * self.learning_process: instance of the class LearningProcess
         * self.request: data entered by the user on html page
     """
@@ -84,7 +84,7 @@ class LearningController(BaseController):
 
     def set_answered_word(self):
         """
-        Sets self.answered_word without white signs at the beginning
+        Sets self.answered_word without white chars at the beginning
         and at the end of string from self.request.args.
         :return: None
         """
@@ -127,7 +127,7 @@ class LearningController(BaseController):
             return
 
         # User wants to continue with learning
-        if self.check_request('continue'):
+        if self.is_in_args('continue'):
             self.process_continue()
 
         # Next round
@@ -135,7 +135,7 @@ class LearningController(BaseController):
             self.set_next_word()
 
         # The user wants to confirm his/her answer
-        if self.check_request('enter-answered'):
+        if self.is_in_args('enter-answered'):
             self.process_enter_answered()
 
     def prepare_render_template(self):

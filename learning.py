@@ -17,7 +17,8 @@ class LearningState:
             - value - english equivalent
             - learned - bool (the word is learned or not)
             - round_mistakes - number of unsuccessfully guessing during round
-            - total_mistakes - number of unsuccessfully guessing during learning
+            - total_mistakes - number of unsuccessfully guessing during
+            learning
     """
 
     def __init__(self, my_vocabulary):
@@ -35,7 +36,10 @@ class LearningState:
             self.words = learning_state['words']
 
         # learning_state created
-        except (FileNotFoundError, ValueError):
+        # FileNotFoundError - file save_learning_state.txt doesn't exist
+        # ValueError - the file save_learning_state.txt is empty or invalid
+        # KeyError - the file doesn't contain valid keys
+        except (FileNotFoundError, ValueError, KeyError):
             self.reset_learning_state()
 
     def round_mistakes_clear(self):
@@ -103,7 +107,7 @@ class LearningState:
 
         del self.ordered_words[0]
 
-    def learning_state(self):
+    def get_learning_state(self):
         """
         Creates a dictionary with instance attributes.
         :return: dict
@@ -125,8 +129,9 @@ class LearningState:
         :return: None
         """
 
-        with open('save_learning_state.txt', mode='w', encoding='utf-8') as saved:
-            saved_learning_state = json.dumps(self.learning_state())
+        with open('save_learning_state.txt', mode='w', encoding='utf-8') \
+                as saved:
+            saved_learning_state = json.dumps(self.get_learning_state())
             print(saved_learning_state, file=saved)
 
     def reset_learning_state(self):
