@@ -130,7 +130,7 @@ class LearningController(BaseController):
         if self.is_in_args('continue'):
             self.process_continue()
 
-        # Next round
+        # New word
         if not self.is_done:
             self.set_next_word()
 
