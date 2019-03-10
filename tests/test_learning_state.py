@@ -15,6 +15,8 @@ def __mock():
     flexmock(MyVocabulary, save_my_vocabulary=lambda: None)
     flexmock(LearningState, __del__=lambda: None)
 
+    flexmock(builtins).should_receive('open').and_raise(FileNotFoundError)
+
 
 def __mock_and_prepare():
     __mock()
@@ -162,12 +164,30 @@ def test_save_learning_state():
 
 
 def test_reset_learning_state():
-    __mock()
-    my_vocabulary = MyVocabulary()
-    my_vocabulary.chosen_words = {"koupit": "buy"}
-    learning_state = LearningState(my_vocabulary)
-    learning_state.words['koupit']['learned'] = True
+    learning_state = __mock_and_prepare()
+
+    learning_state.round_mistakes = 2
+    learning_state.successful = 10
+    learning_state.unsuccessful = 3
+    learning_state.ordered_words = ["koupit", "postavit"]
+    learning_state.words = {"koupit": {'value': 'buy',
+                                       'learned': False,
+                                       'round_mistakes': 1,
+                                       'total_mistakes': 3},
+                            "postavit": {'value': 'build',
+                                       'learned': False,
+                                       'round_mistakes': 1,
+                                       'total_mistakes': 3}}
+
+    learning_state.my_vocabulary.chosen_words = {"být": "be"}
 
     learning_state.reset_learning_state()
 
-    assert learning_state.words["koupit"]['learned'] is False
+    assert learning_state.round_mistakes == 0
+    assert learning_state.successful == 0
+    assert learning_state.unsuccessful == 0
+    assert learning_state.ordered_words == ["být"]
+    assert learning_state.words == {"být": {'value': 'be',
+                                            'learned': False,
+                                            'round_mistakes': 0,
+                                            'total_mistakes': 0}}

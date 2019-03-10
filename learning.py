@@ -35,6 +35,12 @@ class LearningState:
             self.ordered_words = learning_state['ordered_words']
             self.words = learning_state['words']
 
+            # When there is nothing in self.ordered_words and in self.words,
+            # the application would fail... meeting this condition leads to
+            # except block
+            if self.ordered_words == [] or self.words == {}:
+                raise ValueError()
+
         # learning_state created
         # FileNotFoundError - file save_learning_state.txt doesn't exist
         # ValueError - the file save_learning_state.txt is empty or invalid
