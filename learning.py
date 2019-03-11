@@ -1,155 +1,274 @@
 from random import shuffle
+import json
 
 
-def prepare_learning(chosen_words: dict) -> tuple:
+class LearningState:
     """
-    Creates learning_state and learning_stats dictionaries.
-    Dictionary learning_state is created from dictionary chosen_words.
-    Each key from chosen_words is key of this dictionary and value contains
-    dictionary with following three keys:
-    * value (value from chosen_words),
-    * learned (True or False),
-    * all_mistakes (number of all mistakes during learning - each word)
-    Another dictionary learning_stats is created. It is independent
-    of particular words from chosen_words. It contains keys:
-    * round_mistakes (number of mistakes during round - together}
-    * successful (number of successful guessing attempts)
-    * unsuccessful (number of unsuccessful attempts)
-    :rtype: tuple
-    :param chosen_words: dictionary, contains words which the user wants to
-    learn
-    :return: tuple, learning_state, learning_stats: information about learning
+    A class for storage and work with information about the learning process.
+    Instance attributes:
+        * self.my_vocabulary: instance of class MyVocabulary
+        * self.round_mistakes: number of unsuccessfully guessing during round
+        * self.successful: number of successfully guessing during learning
+        * self.unsuccessful: number of unsuccessfully guessing during learning
+        * self.ordered_words: list of words which are offered in current round
+        * self.words: dictionary, contains all words which should be learned
+        and each word contains another dictionary with information about
+        each word:
+            - value - english equivalent
+            - learned - bool (the word is learned or not)
+            - round_mistakes - number of unsuccessfully guessing during round
+            - total_mistakes - number of unsuccessfully guessing during
+            learning
     """
 
-    # TODO dictionary learning_state will contain all variables
-    #      including variables from learning_stats
+    def __init__(self, my_vocabulary):
+        self.my_vocabulary = my_vocabulary
 
-    # New dictionary learning_state is created
-    learning_state = {}
+        try:
+            # When there is saved learning_state, it is loaded
+            with open('save_learning_state.txt', encoding='utf-8') as saved:
+                learning_state = json.loads(saved.read())
 
-    for key, value in chosen_words.items():
+            self.round_mistakes = learning_state['round_mistakes']
+            self.successful = learning_state['successful']
+            self.unsuccessful = learning_state['unsuccessful']
+            self.ordered_words = learning_state['ordered_words']
+            self.words = learning_state['words']
 
-        # Dictionary learning_state is filled with keys from chosen_words
-        # and each of those keys contains 'value', 'learned' and 'all_mistakes'
-        # 'value' is the value of each key from chosen_words
-        learning_state[key] = {'value': value,
-                               # At the beginning are all words from
-                               # chosen_words unlearned (False)
-                               # When they are learned, they change to True
+            # When there is nothing in self.ordered_words and in self.words,
+            # the application would fail... meeting this condition leads to
+            # except block
+            if self.ordered_words == [] or self.words == {}:
+                raise ValueError()
+
+        # learning_state created
+        # FileNotFoundError - file save_learning_state.txt doesn't exist
+        # ValueError - the file save_learning_state.txt is empty or invalid
+        # KeyError - the file doesn't contain valid keys
+        except (FileNotFoundError, ValueError, KeyError):
+            self.reset_learning_state()
+
+    def round_mistakes_clear(self):
+        """
+        Sets a number of round_mistakes to 0.
+        :return: None
+        """
+
+        self.round_mistakes = 0
+
+    def increment_successful(self):
+        """
+        Increments successful by 1.
+        :return: None
+        """
+
+        self.successful += 1
+
+    def get_value(self, key):
+        """
+        Returns a value of a word(key).
+        :param key: str, key from learning_state.words
+        :return: str
+        """
+
+        return self.words[key]['value']
+
+    def get_unlearned(self):
+        """
+        Returns the list of unlearned words.
+        :return: list
+        """
+
+        unlearned = []
+
+        for i in self.words:
+            if self.words[i]['learned'] is False:
+                unlearned.append(i)
+
+        return unlearned
+
+    def set_learned(self, key):
+        """
+        Sets learned to True.
+        :param key: str, key from learning_state.words
+        :return: None
+        """
+
+        self.words[key]['learned'] = True
+
+    def total_mistakes(self, key):
+        """
+        Returns number of mistakes during learning of the word.
+        :param key: str, key from learning_state.words
+        :return: int
+        """
+
+        return self.words[key]['total_mistakes']
+
+    def delete_first_ordered_word(self):
+        """
+        Deletes first item from list self.ordered_words
+        :return: None
+        """
+
+        del self.ordered_words[0]
+
+    def get_learning_state(self):
+        """
+        Creates a dictionary with instance attributes.
+        :return: dict
+        """
+
+        learning_state = {
+            'round_mistakes': self.round_mistakes,
+            'successful': self.successful,
+            'unsuccessful': self.unsuccessful,
+            'ordered_words': self.ordered_words,
+            'words': self.words
+        }
+
+        return learning_state
+
+    def save_learning_state(self):
+        """
+        Saves self to the disk.
+        :return: None
+        """
+
+        with open('save_learning_state.txt', mode='w', encoding='utf-8') \
+                as saved:
+            saved_learning_state = json.dumps(self.get_learning_state())
+            print(saved_learning_state, file=saved)
+
+    def reset_learning_state(self):
+        """
+        Clears learning_state.
+        :return: None
+        """
+
+        self.round_mistakes = 0
+        self.successful = 0
+        self.unsuccessful = 0
+        self.ordered_words = list(self.my_vocabulary.chosen_words.keys())
+
+        self.words = {}
+
+        for key, value in self.my_vocabulary.chosen_words.items():
+            self.words[key] = {'value': value,
                                'learned': False,
-                               # Key all_mistakes contains count of all
-                               # mistakes during learning
-                               # It is important for calculation how many
-                               # times is the word used in next round
-                               'all_mistakes': 0}
+                               'round_mistakes': 0,
+                               'total_mistakes': 0}
 
-    # Dictionary learning_stats contains another variables which are not
-    # related to single words:
-        # ordered_words (at the beginning of each round words which should
-        # be learned are prepared)
-        # round_mistakes (count of mistakes during round, at the beginning of
-        # each round is set to 0)
-        # successful, unsuccessful: count of (un)successful attempts during
-        # learning)
-    learning_stats = {'ordered_words': list(chosen_words.keys()),
-                      'round_mistakes': 0,
-                      'successful': 0,
-                      'unsuccessful': 0}
-
-    return learning_state, learning_stats
+    def __del__(self):
+        self.save_learning_state()
 
 
-def guess_word(guess: str, guessed: str, learning_state: dict, learning_stats: dict) -> tuple:
+class LearningProcess:
     """
-    Checks whether word is answered correctly and returns message about the
-    verdict.
-    :rtype: tuple
-    :param guess: str, first item from learning_stats['ordered_words']
-    :param guessed: str, value of guess from learning_state[guess]['value']
-    :param learning_state: dict, information about learning - each word
-    :param learning_stats: dict, information about learning - together
-    :return: tuple, result: message about guessing;
-    learning_state, learning_stats: information about learning
+    A class for managing the process of learning.
+    Instance attributes:
+        * self.learning_state: information about learning_process
     """
 
-    # If guessed word is equal to value of ordered word,
-    # this attempt is successful
-    # The result is prepared and 1 point is added to successful counter
-    if guessed == learning_state[guess]['value']:
-        result = f'Right! Translation of "{guess}" is "{guessed}".'
-        learning_stats['successful'] += 1
+    def __init__(self, learning_state):
+        self.learning_state = learning_state
 
-    # If guessed is not equal to value of ordered word,
-    # this attempt is unsuccessful
-    # The result with correct translation is prepared
-    # and 1 point is added to following three counters:
-        # all_mistakes (number of all mistakes during learning - each word)
-        # round_mistakes(number of mistakes during round - together}
-        # unsuccessful (number of unsuccessful attempts)
-    else:
-        result = f'Wrong! Correct translation of "{guess}" is ' \
-                 f'"{learning_state[guess]["value"]}".'
-        learning_state[guess]['all_mistakes'] += 1
-        learning_stats['round_mistakes'] += 1
-        learning_stats['unsuccessful'] += 1
+    def get_offered_word(self):
+        """
+        Returns first item from self.ordered_words(for guessing).
+        :return: str
+        """
+        return self.learning_state.ordered_words[0]
 
-    return result, learning_state, learning_stats
+    def check_guessing(self, offered_word, answered_word):
+        """
+        Checks whether the word is correctly answered and returns bool.
+        :param offered_word: str, word which should be guessed
+        :param answered_word: str, word which the user guessed
+        :return: bool
+        """
 
+        return self.learning_state.get_value(offered_word) == answered_word
 
-def check_all_learned(learning_stats: dict) -> tuple:
-    """
-    Checks whether all words have been learned.
-    The function returns message about the success and about number
-    of (un)successful attempts. Otherwise the function returns None.
-    :rtype: tuple
-    :param learning_stats: dict, information about learning - together
-    :return: tuple, message: str, information whether all words have been
-    learned; successful, unsuccessful: information about number of
-    (un)successful attempts of guessing
-    """
+    def increment_success_counter(self):
+        """
+        Increments learning_state.successful counter.
+        :return: None
+        """
 
-    # When there are no mistakes in current round, learning is done,
-    # the function returns message about the success and about count
-    # of (un)successful attempts.
-    if learning_stats['round_mistakes'] == 0:
-        message = f"Good job! You already know all words!"\
+        self.learning_state.increment_successful()
 
-        successful = learning_stats['successful']
-        unsuccessful = learning_stats['unsuccessful']
+    def increment_fail_counters(self, key):
+        """
+        Increments counters:
+            * learning_state.words[key]['total_mistakes']
+            * learning_state.unsuccessful
+            * learning_state.round_mistakes
+        :param key: str, key from learning_state.words
+        :return: None
+        """
 
-    # When there are some round_mistakes, the function ends
-    # and returns None
-    else:
-        message = None
-        successful = None
-        unsuccessful = None
+        self.learning_state.words[key]['round_mistakes'] += 1
+        self.learning_state.words[key]['total_mistakes'] += 1
+        self.learning_state.unsuccessful += 1
+        self.learning_state.round_mistakes += 1
 
-    return message, successful, unsuccessful
+    def check_word_learned(self, key):
+        """
+        Checks whether the word is learned.
+        :return: bool
+        """
 
+        return self.learning_state.words[key]['round_mistakes'] == 0
 
-def prepare_next_round(learning_state: dict, learning_stats: dict) -> tuple:
-    """
-    Prepares next learning round.
-    According to count of mistakes during learning the words are
-    more or less often ordered.
-    :rtype: tuple
-    :param learning_state: dict, information about learning - each word
-    :param learning_stats: dict, information about learning - together
-    :return: tuple, learning_state, learning_stats: information about learning
-    """
+    def set_words_learned(self):
+        """
+        Sets learned of all words which are learned to True
+        :return: None
+        """
 
-    # Variable round_mistakes is set to 0
-    learning_stats['round_mistakes'] = 0
+        for i in self.learning_state.words:
+            if self.check_word_learned(i):
+                self.learning_state.set_learned(i)
 
-    # Variable ordered_words is loaded again with words, which are not learned.
-    # According to count of mistakes during learning the words are
-    # more or less often ordered.
-    for key in learning_state:
-        if learning_state[key]['learned'] is False:
-            count = learning_state[key]['all_mistakes']
-            learning_stats['ordered_words'].extend([key] * count)
+    def is_all_learned(self):
+        """
+        Checks whether all words have been learned.
+        :return: bool
+        """
 
-    # The list with ordered_words is shuffled
-    shuffle(learning_stats['ordered_words'])
+        return self.learning_state.round_mistakes == 0
 
-    return learning_state, learning_stats
+    def get_result(self):
+        """
+        Returns number od (un)successful attempts during learning.
+        :return: tuple
+        """
+
+        return self.learning_state.successful, self.learning_state.unsuccessful
+
+    def prepare_next_round(self):
+        """
+        Prepares next learning round:
+            * Clears counter self.learning_state.round_mistakes
+            * Clears and fills self.learning_state.ordered_words - list of
+            words for next round (according to number of mistakes during
+            whole learning)
+        :return: None
+        """
+
+        self.set_words_learned()
+        self.learning_state.round_mistakes_clear()
+        for i in self.learning_state.words:
+            self.learning_state.words[i]['round_mistakes'] = 0
+
+        self.learning_state.ordered_words = []
+
+        for key in self.learning_state.words:
+            if self.learning_state.words[key]['learned'] is False:
+                
+                # Dependency of frequency of offering each word
+                count = self.learning_state.words[key]['total_mistakes']
+                self.learning_state.ordered_words.extend([key] * count)
+
+        shuffle(self.learning_state.ordered_words)

@@ -52,16 +52,16 @@
 
                         {% else %}
                                 <p class="guess">
-                                    {{guess}}
-                                    <input type="text" name="guessed">
-                                    <input type="submit" name="enter-guessed" value="Confirm">
+                                    {{offered_word}}
+                                    <input type="text" name="answered_word">
+                                    <input type="submit" name="enter-answered" value="Confirm">
                                 </p>
                         {% endif %}
 
                     {% endif %}
                 </p>
 
-                {% if successful %}
+                {% if is_done %}
 
                     <p class="trophy">
 
