@@ -1,4 +1,5 @@
 #MY VOCABULARY
+
 ##Application for creating individualized vocabulary and learning stored words
 
 WIP! (newest version is in branch database_storage)
