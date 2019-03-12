@@ -1,4 +1,5 @@
 import json
+from database import Database
 
 
 class Dictionary:
@@ -9,34 +10,47 @@ class Dictionary:
     """
 
     def __init__(self):
-        self.content = {"být": "be",
-                        "bít": "beat",
-                        "stát se čím": "become",
-                        "začít": "begin",
-                        "kousnout": "bite",
-                        "foukat": "blow",
-                        "rozbít": "break",
-                        "přinést": "bring",
-                        "postavit": "build",
-                        "koupit": "buy"}
+        self.db = Database()
 
     def word_is_in_dictionary(self, required_word):
         """
         Checks if the word is in used dictionary.
-        :param required_word: str, guessed word
+        :param required_word: str, answered word
         :return: bool
         """
 
-        return required_word in self.content
+        cursor = self.db.get_cursor()
+
+        is_in_dictionary = "SELECT COUNT(*) FROM czech WHERE term = %s"
+        cursor.execute(is_in_dictionary, (required_word,))
+        count = cursor.fetchone()[0]
+
+        cursor.close()
+
+        return count > 0
 
     def get_value(self, key):
         """
-        Returns value of key from self.content (english equivalent).
-        :param key: str, key from self.content (czech equivalent)
-        :return: str
+        Returns value of key from the dictionary (english equivalent).
+        :param key: str, key from the dictionary (czech equivalent)
+        :return: list
         """
 
-        return self.content[key]
+        cursor = self.db.get_cursor_tuples()
+
+        get_value = "SELECT EN.term " \
+                    "FROM my_vocabulary.english EN " \
+                    "INNER JOIN my_vocabulary.translation T " \
+                    "ON EN.id = T.english_id " \
+                    "INNER JOIN my_vocabulary.czech CZ " \
+                    "ON T.czech_id = CZ.id " \
+                    "WHERE CZ.term = %s"
+        cursor.execute(get_value, (key,))
+        values = [row.term for row in cursor.fetchall()]
+
+        cursor.close()
+
+        return values[0]
 
 
 class MyVocabulary(Dictionary):
