@@ -1,6 +1,7 @@
 #MY VOCABULARY
 ##Application for creating individualized vocabulary and learning stored words
 
+WIP! (newest version is in branch database_storage)
 
 It is a Flask application written in Python.
 
@@ -38,3 +39,16 @@ attempts during guessing
 - learning is done, when there are no more unlearned words
 - the user is informed about number of successful and unsuccessful attempts
 during learning 
+
+
+TO DO
+
+- tests for work with database
+- method get_value(key) in class Dictionary should return list of values
+- saving my_vocabulary and learning_state in the database
+- work with more words saved in my vocabulary (folders, more pages viewing, 
+various limits)
+- multiple users
+- downloading of pronunciation
+- material design into html and css
+
